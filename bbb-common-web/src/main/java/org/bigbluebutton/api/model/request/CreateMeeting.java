@@ -31,7 +31,7 @@ public class CreateMeeting extends RequestWithChecksum<CreateMeeting.Params> {
     @MeetingIDConstraint
     private String meetingID;
 
-    @NotEmpty(message = "You must provide a voice bridge")
+    //@NotEmpty(message = "You must provide a voice bridge")
     @IsIntegralConstraint(message = "Voice bridge must be a 5-digit integral value")
     private String voiceBridgeString;
     private Integer voiceBridge;
