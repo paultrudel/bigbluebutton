@@ -2,7 +2,6 @@ package org.bigbluebutton.api.model.request;
 
 import org.bigbluebutton.api.model.constraint.UserSessionConstraint;
 
-import javax.validation.constraints.NotNull;
 import java.util.Map;
 
 public class LearningDashboard implements Request<LearningDashboard.Params> {
@@ -34,7 +33,5 @@ public class LearningDashboard implements Request<LearningDashboard.Params> {
     }
 
     @Override
-    public void convertParamsFromString() {
-
-    }
+    public void convertParamsFromString() { }
 }

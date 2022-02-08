@@ -100,6 +100,10 @@ class UrlMappings {
       action = [GET: 'deleteRecordings']
     }
 
+//    "/bigbluebutton/api/insertDocument"(controller: "api") {
+//      action = [POST: 'insertDocument']
+//    }
+
     "/bigbluebutton/$controller/$action?/$id?(.${format})?" {
       constraints {
         // apply constraints here

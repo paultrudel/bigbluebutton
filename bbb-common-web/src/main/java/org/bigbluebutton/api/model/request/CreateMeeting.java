@@ -2,9 +2,6 @@ package org.bigbluebutton.api.model.request;
 
 import org.bigbluebutton.api.model.constraint.*;
 import org.bigbluebutton.api.model.shared.Checksum;
-
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.util.Map;
 
 public class CreateMeeting extends RequestWithChecksum<CreateMeeting.Params> {

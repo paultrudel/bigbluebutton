@@ -40,7 +40,8 @@ public class ValidationService {
         ENTER("enter", RequestType.GET),
         STUNS("stuns", RequestType.GET),
         SIGN_OUT("signOut", RequestType.GET),
-        LEARNING_DASHBOARD("learningDashboard", RequestType.GET);
+        LEARNING_DASHBOARD("learningDashboard", RequestType.GET),
+        INSERT_DOCUMENT("insertDocument", RequestType.GET);
 
         private final String name;
         private final RequestType requestType;
@@ -136,6 +137,9 @@ public class ValidationService {
                         break;
                     case LEARNING_DASHBOARD:
                         request = new LearningDashboard();
+                        break;
+                    case INSERT_DOCUMENT:
+                        request = new InsertDocument();
                         break;
                 }
             case POST:

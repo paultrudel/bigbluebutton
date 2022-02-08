@@ -1213,6 +1213,102 @@ class ApiController {
     }
   }
 
+  /***********************************************
+   * INSERT DOCUMENT API
+   ***********************************************/
+//  def insertDocument = {
+//    String API_CALL = 'insertDocument'
+//    log.debug CONTROLLER_NAME + "#${API_CALL}"
+//
+//    String respMessage = ""
+//    boolean reject = false
+//
+//    String sessionToken
+//    UserSession us
+//    Meeting meeting
+//
+//    Map.Entry<String, String> validationResponse = validateRequest(
+//            ValidationService.ApiCall.INSERT_DOCUMENT,
+//            request.getParameterMap(),
+//            request.getQueryString(),
+//    )
+//
+//    //Validate Session
+//    if(!(validationResponse == null)) {
+//      respMessage = validationResponse.getValue()
+//      reject = true
+//    } else {
+//      sessionToken = sanitizeSessionToken(params.sessionToken)
+//      if (!hasValidSession(sessionToken)) {
+//        reject = true
+//        respMessage = "Invalid Session"
+//      }
+//    }
+//
+//    //Validate User
+//    if(!reject) {
+//      us = getUserSession(sessionToken)
+//
+//      if(us == null) {
+//        reject = true;
+//        respMessage = "Access denied"
+//      } else if(!us.role.equals(ROLE_MODERATOR)) {
+//        reject = true
+//        respMessage = "Access denied"
+//      }
+//    }
+//
+//    //Validate Meeting
+//    if(!reject) {
+//      meeting = meetingService.getMeeting(us.meetingID)
+//      boolean isRunning = meeting != null && meeting.isRunning();
+//      if(!isRunning) {
+//        reject = true
+//        respMessage = "Meeting not found"
+//      }
+//    }
+//
+//    if (reject) {
+//      response.addHeader("Cache-Control", "no-cache")
+//      withFormat {
+//        json {
+//          def builder = new JsonBuilder()
+//          builder.response {
+//            returncode RESP_CODE_FAILED
+//            message respMessage
+//            sessionToken
+//          }
+//          render(contentType: "application/json", text: builder.toPrettyString())
+//        }
+//      }
+//    } else {
+//      downloadAndProcessDocument(params.url, params.meetingID, false, "", false, true)
+//
+//      Map<String, Object> logData = new HashMap<String, Object>();
+//      logData.put("meetingid", us.meetingID);
+//      logData.put("extMeetingid", us.externMeetingID);
+//      logData.put("name", us.fullname);
+//      logData.put("userid", us.internalUserId);
+//      logData.put("sessionToken", sessionToken);
+//      logData.put("logCode", "insertDocument");
+//      logData.put("description", "Insert document into presentation.");
+//
+//      Gson gson = new Gson();
+//      String logStr = gson.toJson(logData);
+//
+//      log.info(" --analytics-- data=" + logStr);
+//
+//      response.addHeader("Cache-Control", "no-cache")
+//
+//      withFormat {
+//        xml {
+//          // No need to use the response builder here until we have a more complex response
+//          render(text: "<response><returncode>$RESP_CODE_SUCCESS</returncode></response>", contentType: "text/xml")
+//        }
+//      }
+//    }
+//  }
+
   def uploadDocuments(conf) { //
     log.debug("ApiController#uploadDocuments(${conf.getInternalId()})");
 
