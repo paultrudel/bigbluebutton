@@ -101,6 +101,7 @@ class MeetingActor(
   object SyncVoiceUserStatusInternalMsg
   object MeetingInfoAnalyticsMsg
   object MeetingInfoAnalyticsLogMsg
+  object PurgeWaitingGuestUsersMsg
 
   override val supervisorStrategy = OneForOneStrategy(maxNrOfRetries = 10, withinTimeRange = 1 minute) {
     case e: Exception => {
@@ -233,6 +234,13 @@ class MeetingActor(
     MeetingInfoAnalyticsMsg
   )
 
+  context.system.scheduler.schedule(
+    10 seconds,
+    15 seconds,
+    self,
+    PurgeWaitingGuestUsersMsg
+  )
+
   def receive = {
     case SyncVoiceUserStatusInternalMsg =>
       checkVoiceConfUsersStatus()
@@ -242,6 +250,8 @@ class MeetingActor(
       handleMeetingInfoAnalyticsLogging()
     case MeetingInfoAnalyticsMsg =>
       handleMeetingInfoAnalyticsService()
+    case PurgeWaitingGuestUsersMsg =>
+      handlePurgeWaitingGuestUsersMsg()
     //=============================
 
     // 2x messages
@@ -613,6 +623,10 @@ class MeetingActor(
     val meetingInfoAnalyticsLogMsg: MeetingInfoAnalytics = prepareMeetingInfo()
     val event2 = MsgBuilder.buildMeetingInfoAnalyticsServiceMsg(meetingInfoAnalyticsLogMsg)
     outGW.send(event2)
+  }
+
+  private def handlePurgeWaitingGuestUsersMsg(): Unit = {
+
   }
 
   private def prepareMeetingInfo(): MeetingInfoAnalytics = {

@@ -206,6 +206,15 @@ object MsgBuilder {
     BbbCommonEnvCoreMsg(envelope, event)
   }
 
+  def buildPurgeWaitingGuestUsersSysMsg(extMeetingId: String, intMeetingId: String): BbbCommonEnvCoreMsg = {
+    val routing = collection.immutable.HashMap("sender" -> "bbb-apps-akka")
+    val envelope = BbbCoreEnvelope(PurgeWaitingGuestUsersSysMsg.NAME, routing)
+    val header = BbbCoreBaseHeader(PurgeWaitingGuestUsersSysMsg.NAME)
+    val body = PurgeWaitingGuestUsersSysMsgBody(extMeetingId, intMeetingId)
+    val event = PurgeWaitingGuestUsersSysMsg(header, body)
+    BbbCommonEnvCoreMsg(envelope, event)
+  }
+
   def buildMeetingDestroyedEvtMsg(meetingId: String): BbbCommonEnvCoreMsg = {
     val routing = collection.immutable.HashMap("sender" -> "bbb-apps-akka")
     val envelope = BbbCoreEnvelope(MeetingDestroyedEvtMsg.NAME, routing)

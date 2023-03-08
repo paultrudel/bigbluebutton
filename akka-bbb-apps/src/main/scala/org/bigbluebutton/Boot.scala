@@ -11,10 +11,10 @@ import org.bigbluebutton.core.pubsub.senders.ReceivedJsonMsgHandlerActor
 import org.bigbluebutton.core2.AnalyticsActor
 import org.bigbluebutton.core2.FromAkkaAppsMsgSenderActor
 import org.bigbluebutton.endpoint.redis.AppsRedisSubscriberActor
-import org.bigbluebutton.endpoint.redis.{ RedisRecorderActor, ExportAnnotationsActor }
+import org.bigbluebutton.endpoint.redis.{ExportAnnotationsActor, RedisRecorderActor}
 import org.bigbluebutton.endpoint.redis.LearningDashboardActor
 import org.bigbluebutton.common2.bus.IncomingJsonMessageBus
-import org.bigbluebutton.service.{ HealthzService, MeetingInfoActor, MeetingInfoService }
+import org.bigbluebutton.service.{HealthzService, MeetingInfoActor, MeetingInfoService}
 
 object Boot extends App with SystemConfiguration {
 

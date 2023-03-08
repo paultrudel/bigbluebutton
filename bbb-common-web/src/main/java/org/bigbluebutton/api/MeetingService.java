@@ -259,7 +259,7 @@ public class MeetingService implements MessageListener {
           if (meeting.userUnregistered(registeredUserID) != null) {
             gw.guestWaitingLeft(meeting.getInternalId(), registeredUserID);
             meeting.setLeftGuestLobby(registeredUserID, true);
-          };
+          }
         }
       }
     }

@@ -155,6 +155,13 @@ case class EndAndKickAllSysMsg(
 ) extends BbbCoreMsg
 case class EndAndKickAllSysMsgBody(meetingId: String)
 
+object PurgeWaitingGuestUsersSysMsg { val NAME = "PurgeWaitingGuestUsersSysMsg" }
+case class PurgeWaitingGuestUsersSysMsg(
+    header: BbbCoreBaseHeader,
+    body:   PurgeWaitingGuestUsersSysMsgBody
+) extends BbbCoreMsg
+case class PurgeWaitingGuestUsersSysMsgBody(extMeetingId: String, intMeetingId: String)
+
 object RecordStatusResetSysMsg { val NAME = "RecordStatusResetSysMsg" }
 case class RecordStatusResetSysMsg(
     header: BbbCoreHeaderWithMeetingId,
