@@ -1353,6 +1353,36 @@ class ApiController {
     }
   }
 
+  /***********************************
+   * MODIFYMEETING (API)
+   ***********************************/
+  def modifyMeeting = {
+    String API_CALL = 'modifyMeeting'
+    log.debug CONTROLLER_NAME + "#${API_CALL}"
+    log.debug request.getParameterMap().toMapString()
+    log.debug request.getQueryString()
+
+    Map.Entry<String, String> validationResponse = validateRequest(
+            ValidationService.ApiCall.MODIFY_MEETING,
+            request.getParameterMap(),
+            request.getQueryString()
+    )
+
+    if(!(validationResponse == null)) {
+      invalid(validationResponse.getKey(), validationResponse.getValue())
+      return
+    } else if(ParamsUtil.sanitizeString(params.meetingID) != params.meetingID) {
+      invalid("validationError", "Invalid meeting ID")
+      return
+    }
+
+    withFormat {
+      xml {
+        render(text: responseBuilder.buildModifyMeetingResponse("Meeting successully modified", RESP_CODE_SUCCESS), contentType: "text/xml")
+      }
+    }
+  }
+
   def uploadDocuments(conf, isFromInsertAPI) {
     if (conf.getDisabledFeatures().contains("presentation")) {
       log.warn("Presentation feature is disabled.")

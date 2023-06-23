@@ -231,6 +231,17 @@ public class ResponseBuilder {
         return xmlText.toString();
     }
 
+    public String buildModifyMeetingResponse(String message, String returnCode) {
+        StringWriter xml = new StringWriter();
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("returnCode", returnCode);
+        data.put("message", message);
+
+        processData(getTemplate("modify-meeting.ftlx"), data, xml);
+        return xml.toString();
+    }
+
     private Template getTemplate(String templateName) {
         Template ftl = null;
         try {
