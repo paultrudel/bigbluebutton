@@ -19,6 +19,8 @@ public class MeetingDurationLimitsValidator implements ConstraintValidator<Meeti
 
     @Override
     public boolean isValid(ModifyMeeting modifyMeeting, ConstraintValidatorContext context) {
+        if(modifyMeeting.getDurationString() == null) return true;
+
         String meetingID = modifyMeeting.getMeetingId();
         Integer duration;
 

@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Max;
 
+@MeetingHasDurationConstraint
 @MeetingDurationLimitsConstraint
 public class ModifyMeeting extends RequestWithChecksum<ModifyMeeting.Params> {
 
@@ -27,7 +28,6 @@ public class ModifyMeeting extends RequestWithChecksum<ModifyMeeting.Params> {
     private String meetingId;
 
     @IsIntegralConstraint
-    @MeetingHasDurationConstraint
     @Min(value = -300, message = "Minimum value for seconds is -300")
     @Max(value = 300, message = "Maximum value for seconds is 300")
     private String durationString;
