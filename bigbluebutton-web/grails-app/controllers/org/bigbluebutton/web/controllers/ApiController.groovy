@@ -600,6 +600,31 @@ class ApiController {
     }
   }
 
+  /*****************************************
+   * GETSERVERINFO API
+   *****************************************/
+  def getServerInfo = {
+    String API_CALL = 'getServerInfo'
+    log.debug CONTROLLER_NAME + "#${API_CALL}"
+
+    Map.Entry<String, String> validationResponse = validateRequest(
+            ValidationService.ApiCall.GET_SERVER_INFO,
+            request.getParameterMap(),
+            request.getQueryString()
+    )
+
+    if(!(validationResponse == null)) {
+      invalid(validationResponse.getKey(), validationResponse.getValue())
+      return
+    }
+
+    withFormat {
+      xml {
+        render(text: responseBuilder.buildGetServerInfoResponse(RESP_CODE_SUCCESS), contentType: "text/xml")
+      }
+    }
+  }
+
   /************************************
    *  GETMEETINGS API
    ************************************/

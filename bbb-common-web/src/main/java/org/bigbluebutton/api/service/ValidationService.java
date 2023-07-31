@@ -33,6 +33,7 @@ public class ValidationService {
         MEETING_RUNNING("isMeetingRunning", RequestType.GET),
         END("end", RequestType.GET),
         GET_MEETING_INFO("getMeetingInfo", RequestType.GET),
+        GET_SERVER_INFO("getServerInfo", RequestType.GET),
         GET_MEETINGS("getMeetings", RequestType.GET),
         GET_SESSIONS("getSessions", RequestType.GET),
         GUEST_WAIT("guestWait", RequestType.GET),
@@ -118,6 +119,7 @@ public class ValidationService {
                         break;
                     case GET_MEETINGS:
                     case GET_SESSIONS:
+                    case GET_SERVER_INFO:
                         request = new SimpleRequest(checksum);
                         break;
                     case INSERT_DOCUMENT:

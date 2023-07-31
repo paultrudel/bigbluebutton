@@ -112,5 +112,6 @@ libraryDependencies ++= Seq(
   "com.zaxxer" % "HikariCP" % "4.0.3",
   "commons-validator" % "commons-validator" % "1.7",
   "org.apache.tika" % "tika-core" % "2.8.0",
-  "org.apache.tika" % "tika-parsers-standard-package" % "2.8.0"
+  "org.apache.tika" % "tika-parsers-standard-package" % "2.8.0",
+  "com.github.oshi" % "oshi-core" % "6.4.4"
 )
