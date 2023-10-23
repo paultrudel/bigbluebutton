@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "org.bigbluebutton.bbb.resource";
+
+message CpuReport {
+  int32 num_physical_processors = 1;
+  int32 num_logical_processors = 2;
+  double prev_min_load_avg = 3;
+  double prev_five_min_load_avg = 4;
+  double prev_fifteen_min_load_avg = 5;
+}
+
+message MemoryReport {
+  int64 total_memory = 1;
+  int64 available_memory = 2;
+  int64 page_size = 3;
+  double memory_usage = 4;
+}
+
+message ResourceReportRequest {}
+
+message ResourceReportResponse {
+  CpuReport cpu = 1;
+  MemoryReport memory = 2;
+}
+
+message ResourceSubscription {
+  int64 interval = 1;
+}
+
+message ResourceSubscriptionResponse {
+  double cpu_load = 1;
+  double memory_usage = 2;
+}
+
+service ResourceService {
+  rpc getResourceReport(ResourceReportRequest) returns (ResourceReportResponse);
+  rpc resourceSubscribe(ResourceSubscription) returns (stream ResourceSubscriptionResponse);
+}
