@@ -34,11 +34,12 @@ public class BbbEventSubscriber implements Subscriber<BbbEvent> {
 
     @Override
     public void onNext(BbbEvent item) {
+        LOGGER.info("Received event from {}", item.getChannel());
         if(channels.contains(item.getChannel()) || channels.contains("*")) {
             LOGGER.info("Passing message from {} to client", item.getChannel());
             observer.onNext(item);
-            this.subscription.request(1);
         }
+        this.subscription.request(1);
     }
 
     @Override
