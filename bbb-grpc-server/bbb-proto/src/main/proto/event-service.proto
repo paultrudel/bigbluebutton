@@ -10,7 +10,6 @@ message BbbEvent {
 
 message BbbEventSubscription {
   repeated string channel = 1;
-  int64 timeout = 2;
 }
 
 service EventService {

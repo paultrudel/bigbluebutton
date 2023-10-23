@@ -15,10 +15,15 @@ public class BbbEventListener implements MessageListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BbbEventListener.class);
 
-    private SubmissionPublisher<BbbEvent> eventPublisher;
+    private final SubmissionPublisher<BbbEvent> eventPublisher;
+
+    public BbbEventListener(SubmissionPublisher<BbbEvent> eventPublisher) {
+        this.eventPublisher = eventPublisher;
+    }
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
+        LOGGER.info("{}", message);
         BbbEvent bbbEvent = BbbEvent.newBuilder()
                 .setChannel(new String(message.getChannel(), StandardCharsets.UTF_8))
                 .setMessage(new String(message.getBody(), StandardCharsets.UTF_8))
