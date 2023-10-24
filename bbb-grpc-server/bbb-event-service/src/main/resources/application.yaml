@@ -1,3 +1,7 @@
 grpc:
   server:
     port: 7100
+bbb:
+  redis:
+    stream:
+      key: "grpc-stream"

@@ -4,14 +4,20 @@ option java_multiple_files = true;
 option java_package = "org.bigbluebutton.bbb.event";
 
 message BbbEvent {
-  string channel = 1;
-  string message = 2;
+  string messageId = 1;
+  string channel = 2;
+  string message = 3;
 }
 
 message BbbEventSubscription {
   repeated string channel = 1;
 }
 
+message BbbEventReplay {
+  string messageId = 1;
+}
+
 service EventService {
   rpc bbbEventSubscribe(BbbEventSubscription) returns (stream BbbEvent);
+  rpc replayEvents(BbbEventReplay) returns (stream BbbEvent);
 }
