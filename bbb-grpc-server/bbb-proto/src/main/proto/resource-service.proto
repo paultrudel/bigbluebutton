@@ -25,16 +25,17 @@ message ResourceReportResponse {
   MemoryReport memory = 2;
 }
 
-message ResourceSubscription {
-  int64 interval = 1;
+message ResourceRequest {
+  int64 timestamp = 1;
 }
 
-message ResourceSubscriptionResponse {
-  double cpu_load = 1;
-  double memory_usage = 2;
+message ResourceResponse {
+  int64 timestamp = 1;
+  double cpu_load = 2;
+  double memory_usage = 3;
 }
 
 service ResourceService {
   rpc getResourceReport(ResourceReportRequest) returns (ResourceReportResponse);
-  rpc resourceSubscribe(ResourceSubscription) returns (stream ResourceSubscriptionResponse);
+  rpc resourceUsage(stream ResourceRequest) returns (stream ResourceResponse);
 }

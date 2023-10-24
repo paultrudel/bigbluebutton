@@ -4,8 +4,14 @@ import org.springframework.stereotype.Service;
 import oshi.hardware.CentralProcessor;
 import oshi.hardware.GlobalMemory;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 @Service
 public class ResourceMonitor {
+
+    private static final Map<Long, long[]> CPU_TICKS = new ConcurrentHashMap<>();
+
     private final CentralProcessor cpu;
     private final GlobalMemory memory;
 
@@ -42,4 +48,23 @@ public class ResourceMonitor {
         return (double) memory.getAvailable() / memory.getTotal();
     }
 
+    public double getSystemLoad(long timestamp) {
+        double systemLoad;
+
+        if(timestamp == 0 || !CPU_TICKS.containsKey(timestamp)) {
+            systemLoad = getSystemLoadAverages(1)[0];
+        } else {
+            long[] oldCpuTicks = CPU_TICKS.remove(timestamp);
+            systemLoad = cpu.getSystemCpuLoadBetweenTicks(oldCpuTicks);
+        }
+
+        return systemLoad;
+    }
+
+    public long generateCpuTicks() {
+        long now = System.currentTimeMillis();
+        long[] cpuTicks = cpu.getSystemCpuLoadTicks();
+        CPU_TICKS.put(now, cpuTicks);
+        return now;
+    }
 }
