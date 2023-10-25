@@ -17,7 +17,26 @@ message BbbEventReplay {
   string messageId = 1;
 }
 
+message StoredEvent {
+  int64 timestamp = 1;
+  string type = 2;
+  string channel = 3;
+  string data = 4;
+}
+
+message ReplayEvents {
+  int64 startTime = 1;
+  int64 endTime = 2;
+}
+
+message EventSearch {
+  string type = 1;
+  string channel = 2;
+}
+
 service EventService {
   rpc bbbEventSubscribe(BbbEventSubscription) returns (stream BbbEvent);
   rpc replayEvents(BbbEventReplay) returns (stream BbbEvent);
+  rpc replay(ReplayEvents) returns (stream StoredEvent);
+  rpc searchEvents(EventSearch) returns (stream StoredEvent);
 }

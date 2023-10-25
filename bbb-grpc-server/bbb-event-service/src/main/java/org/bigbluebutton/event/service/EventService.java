@@ -3,10 +3,7 @@ package org.bigbluebutton.event.service;
 import io.grpc.stub.ServerCallStreamObserver;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
-import org.bigbluebutton.bbb.event.BbbEvent;
-import org.bigbluebutton.bbb.event.BbbEventReplay;
-import org.bigbluebutton.bbb.event.BbbEventSubscription;
-import org.bigbluebutton.bbb.event.EventServiceGrpc;
+import org.bigbluebutton.bbb.event.*;
 import org.bigbluebutton.event.messaging.BbbEventSubscriber;
 import org.bigbluebutton.event.messaging.BbbStreamListener;
 import org.slf4j.Logger;
@@ -55,5 +52,15 @@ public class EventService extends EventServiceGrpc.EventServiceImplBase {
         Subscription subscription = streamContainer.receive(offset, new BbbStreamListener(responseObserver));
         observer.setOnCancelHandler(subscription::cancel);
         streamContainer.start();
+    }
+
+    @Override
+    public void replay(ReplayEvents request, StreamObserver<StoredEvent> responseObserver) {
+        super.replay(request, responseObserver);
+    }
+
+    @Override
+    public void searchEvents(EventSearch request, StreamObserver<StoredEvent> responseObserver) {
+        super.searchEvents(request, responseObserver);
     }
 }

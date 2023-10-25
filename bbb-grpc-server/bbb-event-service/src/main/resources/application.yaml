@@ -5,3 +5,12 @@ bbb:
   redis:
     stream:
       key: "grpc-stream"
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/bbb_event_service
+    username: postgres
+    password: bbb_graphql
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
