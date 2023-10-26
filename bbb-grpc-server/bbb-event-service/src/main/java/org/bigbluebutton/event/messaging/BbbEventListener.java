@@ -1,6 +1,12 @@
 package org.bigbluebutton.event.messaging;
 
 import org.bigbluebutton.bbb.event.BbbEvent;
+import org.bigbluebutton.event.dao.ChannelStore;
+import org.bigbluebutton.event.dao.EventStore;
+import org.bigbluebutton.event.entity.Channel;
+import org.bigbluebutton.event.entity.Event;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.SubmissionPublisher;
 
 @Service
@@ -23,13 +30,22 @@ public class BbbEventListener implements MessageListener {
 
     private final SubmissionPublisher<BbbEvent> eventPublisher;
     private final StringRedisTemplate template;
+    private final ChannelStore channelStore;
+    private final EventStore eventStore;
 
     @Value("${bbb.redis.stream.key}")
     private String streamKey;
 
-    public BbbEventListener(SubmissionPublisher<BbbEvent> eventPublisher, StringRedisTemplate template) {
+    public BbbEventListener(
+            SubmissionPublisher<BbbEvent> eventPublisher,
+            StringRedisTemplate template,
+            ChannelStore channelStore,
+            EventStore eventStore
+    ) {
         this.eventPublisher = eventPublisher;
         this.template = template;
+        this.channelStore = channelStore;
+        this.eventStore = eventStore;
     }
 
     @Override
@@ -62,6 +78,32 @@ public class BbbEventListener implements MessageListener {
                  .setChannel(channel)
                  .setMessage(body)
                  .build();
+        }
+
+        Optional<Channel> result = channelStore.findChannelByName(channel);
+        if(result.isPresent()) {
+            Channel c = result.get();
+            String type;
+
+            try {
+                JSONObject json = new JSONObject(body);
+                type = json.getJSONObject("envelope").getString("name");
+            } catch(JSONException e) {
+                LOGGER.error("Failed to parse event body JSON string caused by: ");
+                LOGGER.error("{}", e.getMessage());
+                type = "Unknown";
+            }
+
+            Event event = Event.builder()
+                    .type(type)
+                    .data(body)
+                    .channelId(c.getId())
+                    .channel(c)
+                    .build();
+
+            eventStore.insertEvent(event);
+        } else {
+            LOGGER.error("No channel with the name {} could be found. Event will not be presisted.", channel);
         }
 
         eventPublisher.submit(bbbEvent);

@@ -32,3 +32,4 @@ INSERT INTO channel(name) VALUES('to-akka-apps-redis-channel');
 INSERT INTO channel(name) VALUES('from-akka-apps-chat-redis-channel');
 INSERT INTO channel(name) VALUES('from-akka-apps-pres-redis-channel');
 INSERT INTO channel(name) VALUES('from-bbb-web-redis-channel');
+INSERT INTO channel(name) VALUES('from-akka-apps-redis-channel')

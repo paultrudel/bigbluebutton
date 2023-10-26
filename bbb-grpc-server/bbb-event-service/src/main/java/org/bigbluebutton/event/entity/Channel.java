@@ -1,20 +1,27 @@
 package org.bigbluebutton.event.entity;
 
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 
-import javax.persistence.*;
 import java.util.Set;
 
-@Entity
-@Data
+@Builder
+@Getter
 public class Channel {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-
     private String name;
 
-    @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<Event> event;
+    @Getter
+    public enum Column {
+        ID("id"),
+        NAME("name");
+
+        private String label;
+
+        Column(String label) { this.label = label; }
+
+    }
+
+    private Set<Event> events;
 }
