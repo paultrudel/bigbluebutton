@@ -116,7 +116,7 @@ public class EventStore {
             Object[] channelIds = channels.values().stream().map(Channel::getId).toArray();
             PreparedStatement statement = connection.prepareStatement("""
                     SELECT * FROM event WHERE channel_id = ANY (?) ORDER BY timestamp DESC""");
-            Array channelIdArray = statement.getConnection().createArrayOf("SERIAL", channelIds);
+            Array channelIdArray = statement.getConnection().createArrayOf("smallint", channelIds);
             statement.setArray(1, channelIdArray);
             ResultSet resultSet = statement.executeQuery();
 
@@ -155,7 +155,7 @@ public class EventStore {
                 statement = connection.prepareStatement("""
                         SELECT * FROM event WHERE channel_id = ANY (?) AND type = ANY (?) ORDER BY timestamp DESC""");
                 Object[] channelIds = channels.values().stream().map(Channel::getId).toArray();
-                Array channelIdArray = statement.getConnection().createArrayOf("SERIAL", channelIds);
+                Array channelIdArray = statement.getConnection().createArrayOf("smallint", channelIds);
                 statement.setArray(1, channelIdArray);
                 Array typeArray = statement.getConnection().createArrayOf("TEXT", types);
                 statement.setArray(2, typeArray);
