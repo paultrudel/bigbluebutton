@@ -2,7 +2,7 @@ CREATE EXTENSION IF NOT EXISTS timescaledb;
 
 CREATE TABLE IF NOT EXISTS channel (
     id smallserial PRIMARY KEY,
-    name varchar(100) NOT NULL UNIQUE
+    name text NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS event (
@@ -12,6 +12,8 @@ CREATE TABLE IF NOT EXISTS event (
     data text NOT NULL,
     CONSTRAINT fk_event_channel FOREIGN KEY(channel_id) REFERENCES channel(id)
 );
+CREATE INDEX event_timestamp_idx ON event (timestamp);
+CREATE INDEX event_type_channel ON event (type, channel_id);
 
 SELECT create_hypertable('event', 'timestamp');
 SELECT add_retention_policy('event', INTERVAL '30 minutes');

@@ -103,7 +103,7 @@ public class BbbEventListener implements MessageListener {
 
             eventStore.insertEvent(event);
         } else {
-            LOGGER.error("No channel with the name {} could be found. Event will not be presisted.", channel);
+            LOGGER.error("No channel with the name {} could be found. Event will not be persisted.", channel);
         }
 
         eventPublisher.submit(bbbEvent);
