@@ -77,7 +77,7 @@ public class EventStore {
 
         try {
             PreparedStatement statement = connection.prepareStatement("""
-                    SELECT * FROM event WHERE type = ANY (?) ORDER BY timestamp DESC""");
+                    SELECT * FROM event WHERE type = ANY (?) ORDER BY timestamp""");
             Array typeArray = statement.getConnection().createArrayOf("TEXT", types);
             statement.setArray(1, typeArray);
             ResultSet resultSet = statement.executeQuery();
@@ -115,7 +115,7 @@ public class EventStore {
         try {
             Object[] channelIds = channels.values().stream().map(Channel::getId).toArray();
             PreparedStatement statement = connection.prepareStatement("""
-                    SELECT * FROM event WHERE channel_id = ANY (?) ORDER BY timestamp DESC""");
+                    SELECT * FROM event WHERE channel_id = ANY (?) ORDER BY timestamp""");
             Array channelIdArray = statement.getConnection().createArrayOf("smallint", channelIds);
             statement.setArray(1, channelIdArray);
             ResultSet resultSet = statement.executeQuery();
@@ -153,7 +153,7 @@ public class EventStore {
                 statement.setArray(1, typeArray);
             } else {
                 statement = connection.prepareStatement("""
-                        SELECT * FROM event WHERE channel_id = ANY (?) AND type = ANY (?) ORDER BY timestamp DESC""");
+                        SELECT * FROM event WHERE channel_id = ANY (?) AND type = ANY (?) ORDER BY timestamp""");
                 Object[] channelIds = channels.values().stream().map(Channel::getId).toArray();
                 Array channelIdArray = statement.getConnection().createArrayOf("smallint", channelIds);
                 statement.setArray(1, channelIdArray);
@@ -190,7 +190,7 @@ public class EventStore {
             OffsetDateTime endTimestamp = Event.millisToTimestamp(endMillis);
 
             PreparedStatement statement = connection.prepareStatement("""
-                    SELECT * FROM event WHERE timestamp >= ? AND timestamp < ? ORDER BY timestamp DESC""");
+                    SELECT * FROM event WHERE timestamp >= ? AND timestamp < ? ORDER BY timestamp""");
             statement.setObject(1, startTimestamp);
             statement.setObject(2, endTimestamp);
             ResultSet resultSet = statement.executeQuery();
