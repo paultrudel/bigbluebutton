@@ -39,7 +39,10 @@ libraryDependencies ++= Seq(
 )
 
 Seq(Revolver.settings: _*)
-lazy val commonMessage = (project in file(".")).settings(name := "bbb-common-message", libraryDependencies ++= Dependencies.runtime).settings(compileSettings, Compile / PB.targets := Seq(scalapb.gen() -> (Compile / sourceManaged).value))
+lazy val commonMessage = (project in file(".")).settings(name := "bbb-common-message", libraryDependencies ++= Dependencies.runtime).settings(
+  compileSettings,
+  Compile / PB.targets := Seq(scalapb.gen() -> (Compile / sourceManaged).value
+))
 
 // See https://github.com/scala-ide/scalariform
 // Config file is in ./.scalariform.conf
