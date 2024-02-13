@@ -171,6 +171,7 @@ class MeetingActor(
 
   // Send new 2x message
   val msgEvent = MsgBuilder.buildMeetingCreatedEvtMsg(liveMeeting.props.meetingProp.intId, liveMeeting.props)
+  val meetingStartTime: Long = System.currentTimeMillis()
   outGW.send(msgEvent)
 
   // Create a default public group chat
