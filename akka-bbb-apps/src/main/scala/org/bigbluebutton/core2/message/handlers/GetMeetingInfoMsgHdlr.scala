@@ -66,7 +66,7 @@ trait GetMeetingInfoMsgHdlr {
       moderatorPw = liveMeeting.props.password.moderatorPass,
       recording = liveMeeting.props.recordProp.record,
       users = users,
-      metadata = Map(),
+      metadata = liveMeeting.props.metadataProp.metadata,
       breakoutRooms = if (state.breakout.isDefined) state.breakout.get.getRooms().map(_.name).toList else List(),
       durationInfo = Some(durationInfo),
       participantInfo = Some(participantInfo),

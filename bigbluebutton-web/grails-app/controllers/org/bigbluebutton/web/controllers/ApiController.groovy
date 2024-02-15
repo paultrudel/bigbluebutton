@@ -2111,7 +2111,7 @@ class ApiController {
                   .withDuration(meetingInfo.getDurationInfo().getDuration())
                   .withTelVoice(meetingInfo.getVoiceBridge())
                   .withDialNumber(meetingInfo.getDialNumber())
-                  .withMetadata(m.getMetadata())
+                  .withMetadata(meetingInfo.getMetadataMap())
                   .isBreakout(meetingInfo.getBreakoutInfo().getIsBreakout())
                   .build()
 
