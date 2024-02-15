@@ -33,7 +33,7 @@ trait GetMeetingInfoMsgHdlr {
       createdOn = liveMeeting.props.durationProps.createdDate,
       duration = liveMeeting.props.durationProps.duration,
       startTime = meetingStartTime,
-      endTime = 0L,
+      endTime = meetingEndTime,
       isRunning = MeetingStatus2x.hasMeetingEnded(liveMeeting.status),
       hasBeenForciblyEnded = false
     )
@@ -41,7 +41,7 @@ trait GetMeetingInfoMsgHdlr {
     val lc = findAllListenOnlyVoiceUsers(liveMeeting.voiceUsers).length
     val participantInfo = ParticipantInfo(
       hasUserJoined = hasAuthedUserJoined(liveMeeting.status),
-      participantCount = Users2x.findAll(liveMeeting.users2x).length,
+      participantCount = Users2x.numUsers(liveMeeting.users2x),
       listenerCount = lc,
       voiceParticipantCount = VoiceUsers.findAll(liveMeeting.voiceUsers).length - lc,
       videoCount = findAll(liveMeeting.webcams).length,

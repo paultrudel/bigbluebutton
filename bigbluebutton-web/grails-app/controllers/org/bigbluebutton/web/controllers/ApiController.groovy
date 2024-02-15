@@ -2119,7 +2119,7 @@ class ApiController {
     meeting.setUserHasJoined(meetingInfo.getParticipantInfo().getHasUserJoined())
     meeting.setForciblyEnded(meetingInfo.getDurationInfo().getHasBeenForciblyEnded())
     meeting.setStartTime(meetingInfo.getDurationInfo().getStartTime())
-    meeting.setEndTime(m.getEndTime())
+    meeting.setEndTime(meetingInfo.getDurationInfo().getEndTime())
     meeting.setNumUsersOnline(meetingInfo.getParticipantInfo().getParticipantCount())
     meeting.setNumListenOnlyUsers(meetingInfo.getParticipantInfo().getListenerCount())
     meeting.setNumVoiceUsers(meetingInfo.getParticipantInfo().getVoiceParticipantCount())
