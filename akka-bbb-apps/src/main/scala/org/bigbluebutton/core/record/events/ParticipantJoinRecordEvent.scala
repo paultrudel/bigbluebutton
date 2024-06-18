@@ -43,6 +43,12 @@ class ParticipantJoinRecordEvent extends AbstractParticipantRecordEvent {
   def setRole(role: String) {
     eventMap.put(ROLE, role)
   }
+
+  def setUserCustomData(userCustomData: Map[String, String]): Unit = {
+    userCustomData.foreach {
+      case (k, v) => eventMap.put(k, v)
+    }
+  }
 }
 
 object ParticipantJoinRecordEvent {

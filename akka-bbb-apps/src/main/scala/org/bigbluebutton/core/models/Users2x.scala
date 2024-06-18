@@ -420,7 +420,8 @@ case class UserState(
     clientType:            String,
     pickExempted:          Boolean,
     userLeftFlag:          UserLeftFlag,
-    speechLocale:          String       = ""
+    speechLocale:          String       = "",
+    userCustomData:         Map[String, String] = Map.empty
 )
 
 case class UserIdAndName(id: String, name: String)
