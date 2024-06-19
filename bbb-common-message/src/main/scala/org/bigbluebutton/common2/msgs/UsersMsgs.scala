@@ -8,7 +8,7 @@ case class RegisterUserReqMsg(
 case class RegisterUserReqMsgBody(meetingId: String, intUserId: String, name: String, role: String,
                                   extUserId: String, authToken: String, avatarURL: String,
                                   guest: Boolean, authed: Boolean, guestStatus: String, excludeFromDashboard: Boolean,
-                                  userCustomData: Map[String, Object])
+                                  userCustomData: Map[String, AnyRef])
 
 object UserRegisteredRespMsg { val NAME = "UserRegisteredRespMsg" }
 case class UserRegisteredRespMsg(

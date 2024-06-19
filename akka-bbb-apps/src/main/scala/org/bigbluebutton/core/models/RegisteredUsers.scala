@@ -204,7 +204,7 @@ case class RegisteredUser(
     joined:                   Boolean,
     banned:                   Boolean,
     loggedOut:                Boolean,
-    lastBreakoutRoom:         BreakoutRoom2x = null,
+    lastBreakoutRoom:         BreakoutRoom2x      = null,
     userCustomData:           Map[String, String] = Map.empty
 )
 
