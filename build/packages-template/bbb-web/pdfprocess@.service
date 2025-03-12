@@ -12,6 +12,7 @@ MemoryMax=640M
 MemorySwapMax=0
 
 EnvironmentFile=/etc/systemd/system/doc-process.env
+EnvironmentFile=/etc/systemd/system/bbb-web-doc-process.env
 ExecStart=/usr/local/bin/pdf-page-process.sh %i
 
 [Install]

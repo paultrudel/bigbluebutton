@@ -57,24 +57,6 @@ public class ImageSlidesGenerationService {
 	public void generateSlides(UploadedPresentation pres) {
 
 		for (int page = 1; page <= pres.getNumberOfPages(); page++) {
-			/* adding accessibility */
-//			createTextFiles(pres, page);
-//			createThumbnails(pres, page);
-//
-//			if (svgImagesRequired) {
-//				try {
-//					createSvgImages(pres, page);
-//				} catch (TimeoutException e) {
-//					log.error("Slide {} was not converted due to TimeoutException, ending process.", page, e);
-//					notifier.sendUploadFileTimedout(pres, page);
-//					break;
-//				}
-//			}
-//
-//			if (generatePngs) {
-//				createPngImages(pres, page);
-//			}
-
 			File textfilesDir = Util.determineTextfilesDirectory(pres.getUploadedFile());
 			if (!textfilesDir.exists())
 				textfilesDir.mkdir();

@@ -118,6 +118,8 @@ Uploaded presentations go through a conversion process in order to be displayed 
 
 The conversion process sends progress messages to the client through the Redis pubsub.
 
+The actual conversion processing work is done outside of BigBlueButton using external services.
+
 ### Presentation conversion flow
 
 The diagram below describes the flow of the presentation conversion. We take in consideration the configuration for enabling and disabling SWF, SVG and PNG conversion.

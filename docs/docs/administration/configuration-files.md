@@ -34,6 +34,7 @@ Starting with BigBlueButton 2.3 many of the configuration files have local overr
 | /usr/local/bigbluebutton/core/scripts/bigbluebutton.yml                 | /etc/bigbluebutton/recording/recording.yml       |
 | /usr/local/bigbluebutton/core/scripts/presentation.yml                  | /etc/bigbluebutton/recording/presentation.yml    |
 | /etc/cron.daily/bigbluebutton                                           | /etc/default/bigbluebutton-cron-config    | Only variables allowed in the override
+| /etc/systemd/system/doc-process.env                                     | /etc/systemd/system/bbb-web-doc-process.env      |                                                                                  |
 
 <br /><br />
 
