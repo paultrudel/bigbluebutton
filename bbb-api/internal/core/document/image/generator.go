@@ -24,14 +24,14 @@ func (g *DownloadMarkerGenerator) Generate(msg pipeline.Message[*document.Presen
 	pres := msg.Payload
 
 	if !pres.Downloadable {
-		return pipeline.NewMessageWithContext(pres, msg.Context()), nil
+		return pipeline.NewMessageWithContext(msg.Context(), pres), nil
 	}
 
 	err := document.MakeDownloadable(msg.Payload.ID, pres.FilePath)
 	if err != nil {
-		return pipeline.NewMessageWithContext(pres, msg.Context()), err
+		return pipeline.NewMessageWithContext(msg.Context(), pres), err
 	}
-	return pipeline.NewMessageWithContext(pres, msg.Context()), nil
+	return pipeline.NewMessageWithContext(msg.Context(), pres), nil
 }
 
 // Thumbnail generator handles the creation of thumbnails for a
@@ -91,7 +91,7 @@ func (g *ThumbnailGenerator) Generate(msg pipeline.Message[*document.Presentatio
 
 	newCtx := context.WithValue(msg.Context(), ThumbnailPathKey, thumbnail)
 
-	return pipeline.NewMessageWithContext(pres, newCtx), nil
+	return pipeline.NewMessageWithContext(newCtx, pres), nil
 }
 
 // TextFileGenerator handles the generation of text files from
@@ -109,10 +109,10 @@ func (g *TextFileGenerator) Generate(msg pipeline.Message[*document.Presentation
 	err := document.Write(textFile, "No text could be retrieved for the slide")
 	if err != nil {
 		slog.Error("Failed to generate text file", "presentation", msg.Payload.ID, "error", err)
-		return pipeline.NewMessageWithContext(pres, msg.Context()), nil
+		return pipeline.NewMessageWithContext(msg.Context(), pres), nil
 	}
 
 	ctx := context.WithValue(msg.Context(), TextFilePathKey, textFile)
 
-	return pipeline.NewMessageWithContext(pres, ctx), nil
+	return pipeline.NewMessageWithContext(ctx, pres), nil
 }

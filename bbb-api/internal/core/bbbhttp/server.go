@@ -108,10 +108,10 @@ func (s *Server) ListenAndServe(address string) {
 
 func (s *Server) initialize() {
 	if s.enableParamCollection {
-		s.Mux.Use(CollectParams())
+		s.Use(CollectParams())
 	}
 	if s.enableCORS {
-		s.Mux.Use(cors.Handler(cors.Options{
+		s.Use(cors.Handler(cors.Options{
 			AllowedOrigins:   []string{"https://*", "http://*"},
 			AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
 			AllowedHeaders:   []string{"Accept", "Content-Type", "X-CSRF-Token"},
@@ -120,6 +120,6 @@ func (s *Server) initialize() {
 			MaxAge:           300,
 		}))
 	}
-	s.Mux.Use(middleware.Heartbeat("/ping"))
-	s.Mux.Use(middleware.Recoverer)
+	s.Use(middleware.Heartbeat("/ping"))
+	s.Use(middleware.Recoverer)
 }

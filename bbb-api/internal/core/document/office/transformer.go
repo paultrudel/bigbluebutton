@@ -66,21 +66,21 @@ func (t *PDFTransformer) Transform(msg pipeline.Message[*document.Presentation])
 			exec:    t.exec,
 		}
 
-		if err := convertOfficeFileToPDF(f); err == nil {
+		err := convertOfficeFileToPDF(f)
+		if err == nil {
 			slog.Info("Conversion succeeded", "inputFile", inFile)
 			pres.FilePath = outFile
-			return pipeline.NewMessageWithContext(pres, msg.Context()), nil
-		} else {
-			slog.Error("Conversion attempt failed",
-				"attempt", attempt, "error", err)
+			return pipeline.NewMessageWithContext(msg.Context(), pres), nil
+		}
+		slog.Error("Conversion attempt failed",
+			"attempt", attempt, "error", err)
 
-			if rmErr := t.removeFile(outFile); rmErr != nil {
-				slog.Error("Failed to remove generated PDF", "error", rmErr)
-			}
+		if rmErr := t.removeFile(outFile); rmErr != nil {
+			slog.Error("Failed to remove generated PDF", "error", rmErr)
 		}
 	}
 
-	return pipeline.NewMessageWithContext(pres, msg.Context()), fmt.Errorf("all conversion attempts failed for file: %s", inFile)
+	return pipeline.NewMessageWithContext(msg.Context(), pres), fmt.Errorf("all conversion attempts failed for file: %s", inFile)
 }
 
 type fileToConvert struct {

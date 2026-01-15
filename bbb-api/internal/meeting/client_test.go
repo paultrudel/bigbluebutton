@@ -428,9 +428,19 @@ func TestMockMeetingServiceClient_Reset(t *testing.T) {
 	mock := NewMockMeetingServiceClient()
 
 	// Make some calls
-	mock.IsMeetingRunning(context.Background(), &meeting.MeetingRunningRequest{})
-	mock.GetMeetingInfo(context.Background(), &meeting.MeetingInfoRequest{})
-	mock.GetMeetingsStream(context.Background(), &meeting.GetMeetingsStreamRequest{})
+	_, err := mock.IsMeetingRunning(context.Background(), &meeting.MeetingRunningRequest{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, err = mock.GetMeetingInfo(context.Background(), &meeting.MeetingInfoRequest{})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	_, err = mock.GetMeetingsStream(context.Background(), &meeting.GetMeetingsStreamRequest{})
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	// Verify calls were recorded
 	if mock.CallCounts["IsMeetingRunning"] != 1 {
@@ -469,9 +479,20 @@ func TestMockMeetingServiceClient_MultipleCalls(t *testing.T) {
 	req2 := &meeting.MeetingRunningRequest{MeetingData: &common.MeetingData{MeetingId: "meeting-2"}}
 	req3 := &meeting.MeetingRunningRequest{MeetingData: &common.MeetingData{MeetingId: "meeting-3"}}
 
-	mock.IsMeetingRunning(context.Background(), req1)
-	mock.IsMeetingRunning(context.Background(), req2)
-	mock.IsMeetingRunning(context.Background(), req3)
+	_, err := mock.IsMeetingRunning(context.Background(), req1)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	_, err = mock.IsMeetingRunning(context.Background(), req2)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	_, err = mock.IsMeetingRunning(context.Background(), req3)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	// Verify all calls tracked
 	if mock.CallCounts["IsMeetingRunning"] != 3 {
@@ -674,9 +695,20 @@ func TestMockHTTPClient_Reset(t *testing.T) {
 	mock := NewMockHTTPClient()
 
 	// Make some calls
-	mock.Download("http://example.com/file1")
-	mock.Follow("http://example.com/redirect", 0, 5)
-	mock.ValidateURL("http://example.com/check")
+	_, err := mock.Download("http://example.com/file1")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	_, err = mock.Follow("http://example.com/redirect", 0, 5)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	err = mock.ValidateURL("http://example.com/check")
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	// Verify calls were recorded
 	if len(mock.DownloadCalls) != 1 {
@@ -742,8 +774,15 @@ func TestMockClient_Reset(t *testing.T) {
 	mock := NewMockClient()
 
 	// Make calls to both mocks
-	mock.IsMeetingRunning(context.Background(), &meeting.MeetingRunningRequest{})
-	mock.Download("http://example.com/file")
+	_, err := mock.IsMeetingRunning(context.Background(), &meeting.MeetingRunningRequest{})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	_, err = mock.Download("http://example.com/file")
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	// Verify calls recorded
 	if mock.CallCounts["IsMeetingRunning"] != 1 {

@@ -37,7 +37,7 @@ func (r *RequestToMeetingInfo) Transform(msg pipeline.Message[*http.Request]) (p
 	ctx := context.WithValue(msg.Context(), core.ParamsKey, params)
 	ctx = context.WithValue(ctx, core.RequestBodyKey, req.Body)
 
-	return pipeline.NewMessageWithContext(grpcReq, ctx), nil
+	return pipeline.NewMessageWithContext(ctx, grpcReq), nil
 }
 
 // MeetingInfoToResponse is a pipleline.Transformer implementation that is used
@@ -76,9 +76,9 @@ func (m *MeetingInfoToResponse) Transform(msg pipeline.Message[*meeting.MeetingI
 
 	m.proc.Convert(presentations)
 
-	return pipeline.NewMessageWithContext(&meetingapi.Response{
+	return pipeline.NewMessageWithContext(msg.Context(), &meetingapi.Response{
 		ReturnCode: responses.ReturnCodeSuccess,
 		MessageKey: responses.PresentationUploadedKey,
 		Message:    responses.PresentationUploadedMsg,
-	}, msg.Context()), nil
+	}), nil
 }

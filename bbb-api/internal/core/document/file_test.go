@@ -177,11 +177,22 @@ func TestMakeFileDownloadable(t *testing.T) {
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
 			testDir := "testdir"
-			os.RemoveAll(testDir)
-			os.Mkdir(testDir, 0755)
+
+			if err := os.RemoveAll(testDir); err != nil {
+				t.Fatal(err)
+			}
+
+			if err := os.Mkdir(testDir, 0755); err != nil {
+				t.Fatal(err)
+			}
+
 			for _, setupFile := range tc.setupFiles {
-				os.MkdirAll(filepath.Dir(setupFile), 0755)
-				os.WriteFile(setupFile, []byte("test content"), 0644)
+				if err := os.MkdirAll(filepath.Dir(setupFile), 0755); err != nil {
+					t.Fatal(err)
+				}
+				if err := os.WriteFile(setupFile, []byte("test content"), 0644); err != nil {
+					t.Fatal(err)
+				}
 			}
 
 			err := MakeDownloadable(tc.id, tc.file)

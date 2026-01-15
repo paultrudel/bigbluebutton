@@ -35,11 +35,11 @@ func (s *SendMeetingRunningRequest) Send(msg pipeline.Message[*meeting.MeetingRu
 
 	for {
 		if time.Since(start) >= timeout {
-			return pipeline.NewMessageWithContext(&meeting.MeetingRunningResponse{
+			return pipeline.NewMessageWithContext(msg.Context(), &meeting.MeetingRunningResponse{
 				MeetingRunning: &common.MeetingRunning{
 					IsRunning: false,
 				},
-			}, msg.Context()), nil
+			}), nil
 		}
 
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
@@ -52,7 +52,7 @@ func (s *SendMeetingRunningRequest) Send(msg pipeline.Message[*meeting.MeetingRu
 		}
 
 		if resp.MeetingRunning.IsRunning {
-			return pipeline.NewMessageWithContext(resp, msg.Context()), nil
+			return pipeline.NewMessageWithContext(msg.Context(), resp), nil
 		}
 
 		time.Sleep(interval)

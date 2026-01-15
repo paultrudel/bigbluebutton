@@ -48,7 +48,7 @@ func (r *RequestToIsMeetingRunning) Transform(msg pipeline.Message[*http.Request
 	ctx := context.WithValue(msg.Context(), core.ParamsKey, params)
 	ctx = context.WithValue(ctx, core.RequestBodyKey, req.Body)
 
-	return pipeline.NewMessageWithContext(grpcReq, ctx), nil
+	return pipeline.NewMessageWithContext(ctx, grpcReq), nil
 }
 
 // MeetingRunningToMeetingInfo is a pipleline.Transformer implementation that is used
@@ -65,7 +65,7 @@ func (m *MeetingRunningToMeetingInfo) Transform(msg pipeline.Message[*meeting.Me
 			MeetingId: parentMeetingID,
 		},
 	}
-	return pipeline.NewMessageWithContext(req, msg.Context()), nil
+	return pipeline.NewMessageWithContext(msg.Context(), req), nil
 }
 
 // MeetingRunningToMeetingInfo is a pipleline.Transformer implementation that is used
@@ -105,24 +105,24 @@ func (m *MeetingRunningToCreate) Transform(msg pipeline.Message[*meeting.Meeting
 
 	if m.proc == nil {
 		slog.Warn("Could not process document; no document processor was provided")
-		return pipeline.NewMessageWithContext(req, msg.Context()), nil
+		return pipeline.NewMessageWithContext(msg.Context(), req), nil
 	}
 
 	parsedDocs, err := m.proc.Parse(modules, params, false)
 	if err != nil {
 		slog.Error("Failed to parse documents from request", "error", err)
-		return pipeline.NewMessageWithContext(req, msg.Context()), nil
+		return pipeline.NewMessageWithContext(msg.Context(), req), nil
 	}
 
 	presentations, err := m.proc.Process(parsedDocs)
 	if err != nil {
 		slog.Error("Failed to process documents from request", "error", err)
-		return pipeline.NewMessageWithContext(req, msg.Context()), nil
+		return pipeline.NewMessageWithContext(msg.Context(), req), nil
 	}
 
 	ctx := context.WithValue(msg.Context(), core.PresentationKey, presentations)
 
-	return pipeline.NewMessageWithContext(req, ctx), nil
+	return pipeline.NewMessageWithContext(ctx, req), nil
 }
 
 func createMeetingSettings(params bbbhttp.Params, parentMeetingInfo *common.MeetingInfo) *common.CreateMeetingSettings {
@@ -150,20 +150,20 @@ func createMeetingSettings(params bbbhttp.Params, parentMeetingInfo *common.Meet
 }
 
 func meetingSettings(params bbbhttp.Params, createTime int64, isBreakout bool, parentMeetingInfo *common.MeetingInfo) (*common.MeetingSettings, bool) {
-	var meetingIntId string
-	var meetingExtId string
+	var meetingIntID string
+	var meetingExtID string
 
 	cfg := config.DefaultConfig()
 
 	if isBreakout {
-		meetingIntId = validation.StripCtrlChars(params.Get(meetingapi.IDParam).Value)
-		parentMeetingId := parentMeetingInfo.MeetingIntId
+		meetingIntID = validation.StripCtrlChars(params.Get(meetingapi.IDParam).Value)
+		parentMeetingID := parentMeetingInfo.MeetingIntId
 		parentCreateTime := parentMeetingInfo.DurationInfo.CreateTime
-		data := parentMeetingId + "-" + strconv.Itoa(int(parentCreateTime)) + "-" + validation.StripCtrlChars(params.Get(meetingapi.SequenceParam).Value)
-		meetingExtId = random.Sha1Hex(data) + strconv.Itoa(int(createTime))
+		data := parentMeetingID + "-" + strconv.Itoa(int(parentCreateTime)) + "-" + validation.StripCtrlChars(params.Get(meetingapi.SequenceParam).Value)
+		meetingExtID = random.Sha1Hex(data) + strconv.Itoa(int(createTime))
 	} else {
-		meetingExtId = validation.StripCtrlChars(params.Get(meetingapi.IDParam).Value)
-		meetingIntId = random.Sha1Hex(meetingExtId) + "-" + strconv.Itoa(int(createTime))
+		meetingExtID = validation.StripCtrlChars(params.Get(meetingapi.IDParam).Value)
+		meetingIntID = random.Sha1Hex(meetingExtID) + "-" + strconv.Itoa(int(createTime))
 	}
 
 	disabledFeaturesMap := make(map[string]struct{})
@@ -191,8 +191,8 @@ func meetingSettings(params bbbhttp.Params, createTime int64, isBreakout bool, p
 
 	return &common.MeetingSettings{
 		Name:                validation.StripCtrlChars(params.Get(meetingapi.NameParam).Value),
-		MeetingExtId:        meetingExtId,
-		MeetingIntId:        meetingIntId,
+		MeetingExtId:        meetingExtID,
+		MeetingIntId:        meetingIntID,
 		MeetingCameraCap:    core.GetInt32OrDefaultValue(params.Get(meetingapi.CameraCapParam).Value, cfg.Meeting.Cameras.Cap),
 		MaxPinnedCameras:    core.GetInt32OrDefaultValue(params.Get(meetingapi.MaxPinnedCamerasParam).Value, cfg.Meeting.Cameras.MaxPinned),
 		CameraBridge:        core.GetStringOrDefaultValue(params.Get(meetingapi.CameraBridgeParam).Value, cfg.Meeting.Brdige.Camera),
@@ -202,7 +202,7 @@ func meetingSettings(params bbbhttp.Params, createTime int64, isBreakout bool, p
 		DisabledFeatures:    disabledFeatures,
 		NotifyRecordingIsOn: core.GetBoolOrDefaultValue(params.Get(meetingapi.NotifyRecordingIsOnParam).Value, cfg.Recording.NotifyRecordingIsOn),
 		PresUploadExtDesc:   core.GetStringOrDefaultValue(validation.StripCtrlChars(params.Get(meetingapi.PresUploadExtDescParam).Value), cfg.Presentation.Upload.External.Description),
-		PresUploadExtUrl:    core.GetStringOrDefaultValue(validation.StripCtrlChars(params.Get(meetingapi.PresUploadExtURLParam).Value), cfg.Presentation.Upload.External.Url),
+		PresUploadExtUrl:    core.GetStringOrDefaultValue(validation.StripCtrlChars(params.Get(meetingapi.PresUploadExtURLParam).Value), cfg.Presentation.Upload.External.URL),
 	}, learningDashboardEnabled
 }
 
@@ -304,7 +304,7 @@ func welcomeSettings(params bbbhttp.Params, isBreakout bool, dialNumber string, 
 func usersSettings(params bbbhttp.Params) *common.UserSettings {
 	cfg := config.DefaultConfig()
 	maxUserConcurentAccess := cfg.Meeting.Users.MaxConcurrentAccess
-	if !cfg.Meeting.Users.AllowDuplicateExtUserId {
+	if !cfg.Meeting.Users.AllowDuplicateExtUserID {
 		maxUserConcurentAccess = 1
 	}
 	return &common.UserSettings{
@@ -397,7 +397,7 @@ func systemSettings(params bbbhttp.Params) *common.SystemSettings {
 
 func groupSettings(params bbbhttp.Params) []*common.GroupSettings {
 	type Group struct {
-		Id     string   `json:"id"`
+		ID     string   `json:"id"`
 		Name   string   `json:"name"`
 		Roster []string `json:"roster"`
 	}
@@ -413,7 +413,7 @@ func groupSettings(params bbbhttp.Params) []*common.GroupSettings {
 	groupProps := make([]*common.GroupSettings, len(groups))
 	for i, g := range groups {
 		groupProps[i] = &common.GroupSettings{
-			GroupId:     g.Id,
+			GroupId:     g.ID,
 			Name:        g.Name,
 			UsersExtIds: g.Roster,
 		}
@@ -451,7 +451,7 @@ func pluginSettings(params bbbhttp.Params) *common.PluginSettings {
 }
 
 func replaceKeywords(message string, dialNumber string, voiceBridge string, meetingName string, url string) string {
-	keywords := []string{meetingapi.DialNum, meetingapi.ConfNum, meetingapi.ConfName, meetingapi.ServerUrl}
+	keywords := []string{meetingapi.DialNum, meetingapi.ConfNum, meetingapi.ConfName, meetingapi.ServerURL}
 	for _, v := range keywords {
 		switch v {
 		case meetingapi.DialNum:
@@ -460,26 +460,26 @@ func replaceKeywords(message string, dialNumber string, voiceBridge string, meet
 			message = strings.ReplaceAll(message, meetingapi.ConfNum, voiceBridge)
 		case meetingapi.ConfName:
 			message = strings.ReplaceAll(message, meetingapi.ConfName, meetingName)
-		case meetingapi.ServerUrl:
-			message = strings.ReplaceAll(message, meetingapi.ServerUrl, url)
+		case meetingapi.ServerURL:
+			message = strings.ReplaceAll(message, meetingapi.ServerURL, url)
 		}
 	}
 	return message
 }
 
-// MeetingRunningToMeetingInfo is a pipleline.Transformer implementation that is used
+// ToResponse is a pipleline.Transformer implementation that is used
 // to transform a gRPC [CreateMeetingResponse] into a BigBlueButton [CreateMeetingResponse].
-type CreateMeetingToResponse struct {
+type ToResponse struct {
 	proc document.Processor
 }
 
-func (c *CreateMeetingToResponse) Transform(msg pipeline.Message[*meeting.CreateMeetingResponse]) (pipeline.Message[*meetingapi.CreateMeetingResponse], error) {
+func (c *ToResponse) Transform(msg pipeline.Message[*meeting.CreateMeetingResponse]) (pipeline.Message[*meetingapi.CreateMeetingResponse], error) {
 	meetingInfo := msg.Payload.CreatedMeetingInfo
 	resp := &meetingapi.CreateMeetingResponse{
 		ReturnCode:           responses.ReturnCodeSuccess,
-		MeetingId:            meetingInfo.MeetingExtId,
-		InternalMeetingId:    meetingInfo.MeetingIntId,
-		ParentMeetingId:      meetingInfo.ParentMeetingId,
+		MeetingID:            meetingInfo.MeetingExtId,
+		InternalMeetingID:    meetingInfo.MeetingIntId,
+		ParentMeetingID:      meetingInfo.ParentMeetingId,
 		AttendeePW:           meetingInfo.AttendeePw,
 		ModeratorPW:          meetingInfo.ModeratorPw,
 		CreateTime:           meetingInfo.CreateTime,
@@ -494,16 +494,16 @@ func (c *CreateMeetingToResponse) Transform(msg pipeline.Message[*meeting.Create
 	if meetingInfo.IsDuplicate {
 		resp.MessageKey = responses.CreateMeetingDuplicateKey
 		resp.Message = responses.CreateMeetingDuplicateMsg
-		return pipeline.NewMessageWithContext(resp, msg.Context()), nil
+		return pipeline.NewMessageWithContext(msg.Context(), resp), nil
 	}
 
 	presentations, err := pipeline.ContextValue[[]coredoc.Presentation](msg.Context(), core.PresentationKey)
 	if err != nil {
 		slog.Info("No documents found for processing")
-		return pipeline.NewMessageWithContext(resp, msg.Context()), nil
+		return pipeline.NewMessageWithContext(msg.Context(), resp), nil
 	}
 
 	c.proc.Convert(presentations)
 
-	return pipeline.NewMessageWithContext(resp, msg.Context()), nil
+	return pipeline.NewMessageWithContext(msg.Context(), resp), nil
 }

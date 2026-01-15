@@ -78,5 +78,5 @@ func (t *PDFTransformer) Transform(msg pipeline.Message[*document.Presentation])
 
 	pres.Pages = pages
 
-	return pipeline.NewMessageWithContext(pres, msg.Context()), nil
+	return pipeline.NewMessageWithContext(msg.Context(), pres), nil
 }

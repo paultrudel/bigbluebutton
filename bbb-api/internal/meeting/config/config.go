@@ -114,7 +114,7 @@ type Config struct {
 		Users struct {
 			Max                     int32  `yaml:"max"`
 			MaxConcurrentAccess     int32  `yaml:"max_concurrent_access"`
-			AllowDuplicateExtUserId bool   `yaml:"allow_duplicate_ext_user_id"`
+			AllowDuplicateExtUserID bool   `yaml:"allow_duplicate_ext_user_id"`
 			GuestPolicy             string `yaml:"guest_policy"`
 			AllowModsToUnmute       bool   `yaml:"allow_mods_to_unmute"`
 			AuthenticatedGuest      bool   `yaml:"authenticated_guest"`
@@ -170,7 +170,7 @@ type Config struct {
 		Upload struct {
 			External struct {
 				Description string `yaml:"description"`
-				Url         string `yaml:"url"`
+				URL         string `yaml:"url"`
 			} `yaml:"external"`
 			Directory    string   `yaml:"directory"`
 			Protocols    []string `yaml:"protocols"`

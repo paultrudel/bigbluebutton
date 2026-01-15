@@ -23,7 +23,7 @@ const (
 	DialNum                            = "%%DIALNUM%%"
 	ConfNum                            = "%%CONFNUM%%"
 	ConfName                           = "%%CONFNAME%%"
-	ServerUrl                          = "%%SERVERURL%%"
+	ServerURL                          = "%%SERVERURL%%"
 
 	IDParam                            = "meetingID"
 	NameParam                          = "name"

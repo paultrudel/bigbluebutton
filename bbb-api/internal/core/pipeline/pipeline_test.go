@@ -88,7 +88,7 @@ func TestMessage_WithContext(t *testing.T) {
 
 func TestMessage_NewMessageWithContext(t *testing.T) {
 	ctx := context.Background()
-	msg1 := NewMessageWithContext("test", ctx)
+	msg1 := NewMessageWithContext(ctx, "test")
 
 	if msg1.ctx != ctx {
 		t.Error("context was not set")

@@ -1,0 +1,49 @@
+name: PR Integration Test
+on:
+  pull_request:
+  workflow_call:
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      packages: ${{ steps.filter.outputs.changes }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            meeting:
+              - 'bbb-api/gen/**'
+              - 'bbb-api/internal/core/**'
+              - 'bbb-api/configs/meeting-*/**'
+              - 'bbb-api/internal/meeting/**'
+              - 'bbb-api/Dockerfile-meeting'
+              - 'bbb-api/go.mod'
+  integration-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: bbb-api
+    needs: changes
+    if: ${{ needs.changes.outputs.packages != '[]' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        package: ${{ fromJSON(needs.changes.outputs.packages) }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Install Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.23.5
+          cache-dependency-path: bbb-api/go.sum
+      - name: Build Test Docker Image
+        run: |
+          go mod vendor
+          docker build -f Dockerfile-${{matrix.package}} -t imdt/bigbluebutton-api-${{matrix.package}}:latest .
+      - name: Integration Test
+        run: go test -v ./test/... --tags=integration,${{matrix.package}}

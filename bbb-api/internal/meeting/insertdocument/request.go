@@ -36,5 +36,5 @@ func (s *SendMeetingInfoRequest) Send(msg pipeline.Message[*meeting.MeetingInfoR
 		slog.Error("MeetingInfo gRPC request failed", "error", err)
 		return pipeline.Message[*meeting.MeetingInfoResponse]{}, core.GrpcErrorToBBBError(err)
 	}
-	return pipeline.NewMessageWithContext(res, msg.Context()), nil
+	return pipeline.NewMessageWithContext(msg.Context(), res), nil
 }

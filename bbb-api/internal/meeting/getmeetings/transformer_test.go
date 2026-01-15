@@ -193,7 +193,7 @@ func TestHTTPToGRPC_Transform(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			transformer := &HTTPToGRPC{}
 			req := tt.setupRequest(tt.meetingID, tt.includeParams)
-			msg := pipeline.NewMessageWithContext(req, req.Context())
+			msg := pipeline.NewMessageWithContext(req.Context(), req)
 
 			result, err := transformer.Transform(msg)
 
@@ -263,7 +263,7 @@ func TestHTTPToGRPC_Transform_MessageContext(t *testing.T) {
 				params.Set(meetingapi.IDParam, bbbhttp.Param{Value: meetingID, FromQuery: true})
 				ctx := context.WithValue(context.Background(), bbbhttp.ParamsKey, params)
 				req = req.WithContext(ctx)
-				return pipeline.NewMessageWithContext(req, ctx)
+				return pipeline.NewMessageWithContext(ctx, req)
 			},
 			shouldErr: false,
 		},
@@ -382,11 +382,11 @@ func TestGRPCToResponse_Transform(t *testing.T) {
 					t.Fatalf("Expected 1 meeting, got %d", len(meetings))
 				}
 				m := meetings[0]
-				if m.MeetingId != "meeting-1" {
-					t.Errorf("MeetingId = %s, want meeting-1", m.MeetingId)
+				if m.MeetingID != "meeting-1" {
+					t.Errorf("MeetingId = %s, want meeting-1", m.MeetingID)
 				}
-				if m.InternalMeetingId != "internal-1" {
-					t.Errorf("InternalMeetingId = %s, want internal-1", m.InternalMeetingId)
+				if m.InternalMeetingID != "internal-1" {
+					t.Errorf("InternalMeetingID = %s, want internal-1", m.InternalMeetingID)
 				}
 				if m.MeetingName != "Test Meeting 1" {
 					t.Errorf("MeetingName = %s, want Test Meeting 1", m.MeetingName)
@@ -407,8 +407,8 @@ func TestGRPCToResponse_Transform(t *testing.T) {
 				}
 				for i, m := range meetings {
 					expectedID := "meeting-" + string(rune('1'+i))
-					if m.MeetingId != expectedID {
-						t.Errorf("Meeting[%d].MeetingId = %s, want %s", i, m.MeetingId, expectedID)
+					if m.MeetingID != expectedID {
+						t.Errorf("Meeting[%d].MeetingId = %s, want %s", i, m.MeetingID, expectedID)
 					}
 				}
 			},

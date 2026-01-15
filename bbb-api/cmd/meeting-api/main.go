@@ -5,7 +5,7 @@ import (
 	"log/slog"
 	"net/http"
 
-	"github.com/bigbluebutton/bigbluebutton/bbb-api/internal/core/api"
+	"github.com/bigbluebutton/bigbluebutton/bbb-api/internal/core/bbbapi"
 	"github.com/bigbluebutton/bigbluebutton/bbb-api/internal/core/bbbhttp"
 	"github.com/bigbluebutton/bigbluebutton/bbb-api/internal/meeting"
 	"github.com/bigbluebutton/bigbluebutton/bbb-api/internal/meeting/config"
@@ -52,7 +52,7 @@ func main() {
 	client := meeting.NewClientWithConn(conn)
 	proc := document.NewDefaultProcessor(cfg, client)
 
-	meetingAPI := api.NewAPI(address, func(server *bbbhttp.Server) {
+	meetingAPI := bbbapi.NewDefaultAPI(address, func(server *bbbhttp.Server) {
 		server.AddRoute(http.MethodGet, "/isMeetingRunning", meeting.NewHandlerFunc(ismeetingrunning.NewIsMeetingRunningFlow(client)))
 		server.AddRoute(http.MethodPost, "/isMeetingRunning", meeting.NewHandlerFunc(ismeetingrunning.NewIsMeetingRunningFlow(client)))
 		server.AddRoute(http.MethodGet, "/getMeetingInfo", getmeetinginfo.NewHandlerFunc(getmeetinginfo.NewGetMeetingInfoFlow(client)))

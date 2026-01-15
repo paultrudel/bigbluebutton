@@ -16,7 +16,7 @@ type GenerationProcess interface {
 	Pages(start, end int) GenerationProcess
 	InputOutput(inFile, OutFile string) GenerationProcess
 	Analyze(file string) GenerationProcess
-	Execute(exec func(ctx context.Context, name string, args ...string) *exec.Cmd, timeout int, ctx context.Context) *exec.Cmd
+	Execute(ctx context.Context, exec func(ctx context.Context, name string, args ...string) *exec.Cmd, timeout int) *exec.Cmd
 }
 
 // A GenerationProcessImpl is an identifier for
@@ -90,7 +90,7 @@ func (p *PDFToCairoGenerationProcess) Analyze(file string) GenerationProcess {
 }
 
 // Execute constructs the final generation command and wraps it in a timeout process using the provided timeout in seconds and context.
-func (p *PDFToCairoGenerationProcess) Execute(exec func(ctx context.Context, name string, args ...string) *exec.Cmd, timeout int, ctx context.Context) *exec.Cmd {
+func (p *PDFToCairoGenerationProcess) Execute(ctx context.Context, exec func(ctx context.Context, name string, args ...string) *exec.Cmd, timeout int) *exec.Cmd {
 	finalCmd := fmt.Sprintf("%s %s", p.cmd, p.analysisCmd)
 	args := []string{
 		fmt.Sprintf("%ds", timeout),

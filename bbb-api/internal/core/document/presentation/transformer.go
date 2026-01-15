@@ -10,15 +10,15 @@ import (
 	"github.com/bigbluebutton/bigbluebutton/bbb-api/internal/core/pipeline"
 )
 
-// PresentationToMeetingRunning is a pipeline.Transformer
+// UploadToMeetingRunning is a pipeline.Transformer
 // implementation for transforming a [Presentation] into
 // a [MeetingRunningRequest].
-type PresentationToMeetingRunning struct{}
+type UploadToMeetingRunning struct{}
 
 // Transform takes a [Presentation] and builds a
 // [MeetingRunningRequest] for the meeting associated
 // with the [Presentation].
-func (p *PresentationToMeetingRunning) Transform(msg pipeline.Message[*document.Presentation]) (pipeline.Message[*meeting.MeetingRunningRequest], error) {
+func (p *UploadToMeetingRunning) Transform(msg pipeline.Message[*document.Presentation]) (pipeline.Message[*meeting.MeetingRunningRequest], error) {
 	pres := msg.Payload
 
 	req := &meeting.MeetingRunningRequest{
@@ -29,7 +29,7 @@ func (p *PresentationToMeetingRunning) Transform(msg pipeline.Message[*document.
 
 	ctx := context.WithValue(msg.Context(), core.PresentationKey, pres)
 
-	return pipeline.NewMessageWithContext(req, ctx), nil
+	return pipeline.NewMessageWithContext(ctx, req), nil
 }
 
 // MeetingRunningToPresenation is a pipeline.Transformer
@@ -53,5 +53,5 @@ type NoOpTransformer struct{}
 // document.Presentation and simply outputs a new message
 // with the same payload and context.
 func (n *NoOpTransformer) Transform(msg pipeline.Message[*document.Presentation]) (pipeline.Message[*document.Presentation], error) {
-	return pipeline.NewMessageWithContext(msg.Payload, msg.Context()), nil
+	return pipeline.NewMessageWithContext(msg.Context(), msg.Payload), nil
 }

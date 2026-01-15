@@ -1,4 +1,4 @@
-package api
+package bbbapi
 
 import (
 	"fmt"
@@ -12,7 +12,7 @@ import (
 var listeningHost string
 var listeningPort string
 
-func (api *API) ListenAndServe(address string) {
+func (api *DefaultAPI) ListenAndServe(address string) {
 	parts := strings.Split(address, ":")
 	if len(parts) != 2 {
 		return
@@ -26,7 +26,7 @@ func TestAPIStart(t *testing.T) {
 	port := "8080"
 	address := fmt.Sprintf("%s:%s", host, port)
 
-	api := NewAPI(address, func(server *bbbhttp.Server) {
+	api := NewDefaultAPI(address, func(server *bbbhttp.Server) {
 		// Test function; no routes needed.
 	})
 	api.Start()
@@ -39,13 +39,13 @@ func TestAPIStart(t *testing.T) {
 	}
 }
 
-func TestNewAPI(t *testing.T) {
+func TestNewDefaultAPI(t *testing.T) {
 	routes := []string{"/bigbluebutton/test/"}
 	host := "localhost"
 	port := "8080"
 	address := fmt.Sprintf("%s:%s", host, port)
 
-	api := NewAPI(address, func(server *bbbhttp.Server) {
+	api := NewDefaultAPI(address, func(server *bbbhttp.Server) {
 		server.AddRoute(http.MethodGet, "/bigbluebutton/test/", func(w http.ResponseWriter, r *http.Request) {
 			// Test function; no routes needed.
 		})

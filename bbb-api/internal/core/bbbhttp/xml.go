@@ -3,15 +3,16 @@ package bbbhttp
 import (
 	"encoding/xml"
 	"io"
+	"log/slog"
 	"net/http"
 )
 
 // WriteXML marshals the provided data to XML and uses it to write a reponse
 // with the given status code and headers.
-func WriteXML(w http.ResponseWriter, status int, data any, headers ...http.Header) error {
+func WriteXML(w http.ResponseWriter, status int, data any, headers ...http.Header) {
 	xml, err := xml.Marshal(data)
 	if err != nil {
-		return err
+		slog.Error("Failed to marshal response for request", "data", data, "error", err)
 	}
 
 	if len(headers) > 0 {
@@ -25,10 +26,8 @@ func WriteXML(w http.ResponseWriter, status int, data any, headers ...http.Heade
 
 	_, err = w.Write(xml)
 	if err != nil {
-		return err
+		slog.Error("Failed to write response for request", "error", err)
 	}
-
-	return nil
 }
 
 // Modules is a collection of XML modules.

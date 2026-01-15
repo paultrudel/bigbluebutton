@@ -1,6 +1,6 @@
-// Package api provides the functionality for quickly
+// Package bbbapi provides the functionality for quickly
 // standing up a new API server.
-package api
+package bbbapi
 
 import (
 	"log/slog"
@@ -8,31 +8,31 @@ import (
 	"github.com/bigbluebutton/bigbluebutton/bbb-api/internal/core/bbbhttp"
 )
 
-// An API is a composed of a server that can be run at
+// A DefaultAPI is composed of a server that can be run at
 // the specified address.
-type API struct {
+type DefaultAPI struct {
 	*bbbhttp.Server
 	address string
 }
 
 // Start begins running the API at a specific address.
-func (api *API) Start() {
+func (api *DefaultAPI) Start() {
 	slog.Info("API started at " + api.address)
 	api.ListenAndServe(api.address)
 }
 
-// NewAPI creates a new API that is accessible at the given address.
+// NewDefaultAPI creates a new API that is accessible at the given address.
 // Register is used by the underlying server to define the routes that
 // the API can handle requests on.
-func NewAPI(address string, register func(server *bbbhttp.Server)) *API {
+func NewDefaultAPI(address string, register func(server *bbbhttp.Server)) *DefaultAPI {
 	api := configureAPI(address)
 	register(api.Server)
 	return api
 }
 
-func configureAPI(address string) *API {
+func configureAPI(address string) *DefaultAPI {
 	bbbServer := bbbhttp.NewDefaultServer()
-	return &API{
+	return &DefaultAPI{
 		Server:  bbbServer,
 		address: address,
 	}

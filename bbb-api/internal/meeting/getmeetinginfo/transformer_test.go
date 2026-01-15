@@ -221,7 +221,7 @@ func TestHTTPToGRPC_Transform(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			transformer := &HTTPToGRPC{}
 			req := tt.setupRequest(tt.meetingID, tt.includeParams)
-			msg := pipeline.NewMessageWithContext(req, req.Context())
+			msg := pipeline.NewMessageWithContext(req.Context(), req)
 
 			result, err := transformer.Transform(msg)
 
@@ -295,7 +295,7 @@ func TestHTTPToGRPC_Transform_MessageContext(t *testing.T) {
 				params.Set(meetingapi.IDParam, bbbhttp.Param{Value: meetingID, FromQuery: true})
 				ctx := context.WithValue(context.Background(), bbbhttp.ParamsKey, params)
 				req = req.WithContext(ctx)
-				return pipeline.NewMessageWithContext(req, ctx)
+				return pipeline.NewMessageWithContext(ctx, req)
 			},
 			shouldErr: false,
 		},
@@ -408,8 +408,8 @@ func TestGRPCToResponse_Transform(t *testing.T) {
 			expected: &meetingapi.GetMeetingInfoResponse{
 				ReturnCode:            "SUCCESS",
 				MeetingName:           "Test Meeting",
-				MeetingId:             "ext-123",
-				InternalMeetingId:     "int-456",
+				MeetingID:             "ext-123",
+				InternalMeetingID:     "int-456",
 				CreateTime:            1700000000000,
 				CreateDate:            "Wed Nov 14 12:26:40 UTC 2023",
 				VoiceBridge:           "71234",
@@ -432,7 +432,7 @@ func TestGRPCToResponse_Transform(t *testing.T) {
 				Users: meetingapi.Users{
 					Users: []meetingapi.User{
 						{
-							UserId:          "user-1",
+							UserID:          "user-1",
 							FullName:        "John Doe",
 							Role:            "MODERATOR",
 							IsPresenter:     true,
@@ -443,7 +443,7 @@ func TestGRPCToResponse_Transform(t *testing.T) {
 							CustomData:      meetingapi.MapData{Data: map[string]string{"key1": "value1"}, TagName: "customdata"},
 						},
 						{
-							UserId:          "user-2",
+							UserID:          "user-2",
 							FullName:        "Jane Smith",
 							Role:            "VIEWER",
 							IsPresenter:     false,
@@ -501,8 +501,8 @@ func TestGRPCToResponse_Transform(t *testing.T) {
 			expected: &meetingapi.GetMeetingInfoResponse{
 				ReturnCode:            "SUCCESS",
 				MeetingName:           "Empty Meeting",
-				MeetingId:             "empty-ext",
-				InternalMeetingId:     "empty-int",
+				MeetingID:             "empty-ext",
+				InternalMeetingID:     "empty-int",
 				CreateTime:            1700000000000,
 				CreateDate:            "Wed Nov 14 12:26:40 UTC 2023",
 				VoiceBridge:           "70000",
@@ -569,8 +569,8 @@ func TestGRPCToResponse_Transform(t *testing.T) {
 			expected: &meetingapi.GetMeetingInfoResponse{
 				ReturnCode:            "SUCCESS",
 				MeetingName:           "Breakout Room 1",
-				MeetingId:             "breakout-ext",
-				InternalMeetingId:     "breakout-int",
+				MeetingID:             "breakout-ext",
+				InternalMeetingID:     "breakout-int",
 				CreateTime:            1700000500000,
 				CreateDate:            "Wed Nov 14 12:35:00 UTC 2023",
 				VoiceBridge:           "71111",
@@ -637,8 +637,8 @@ func TestGRPCToResponse_Transform(t *testing.T) {
 			expected: &meetingapi.GetMeetingInfoResponse{
 				ReturnCode:            "SUCCESS",
 				MeetingName:           "Ended Meeting",
-				MeetingId:             "ended-ext",
-				InternalMeetingId:     "ended-int",
+				MeetingID:             "ended-ext",
+				InternalMeetingID:     "ended-int",
 				CreateTime:            1700000000000,
 				CreateDate:            "Wed Nov 14 12:26:40 UTC 2023",
 				VoiceBridge:           "72222",
@@ -705,8 +705,8 @@ func TestGRPCToResponse_Transform(t *testing.T) {
 			expected: &meetingapi.GetMeetingInfoResponse{
 				ReturnCode:            "SUCCESS",
 				MeetingName:           "Test <Meeting> & \"Special\" 'Chars'",
-				MeetingId:             "special-<>&\"'-ext",
-				InternalMeetingId:     "special-int",
+				MeetingID:             "special-<>&\"'-ext",
+				InternalMeetingID:     "special-int",
 				CreateTime:            1700000000000,
 				CreateDate:            "Wed Nov 14 12:26:40 UTC 2023",
 				VoiceBridge:           "73333",
@@ -785,8 +785,8 @@ func TestGRPCToResponse_Transform(t *testing.T) {
 			expected: &meetingapi.GetMeetingInfoResponse{
 				ReturnCode:            "SUCCESS",
 				MeetingName:           "Single User Meeting",
-				MeetingId:             "single-ext",
-				InternalMeetingId:     "single-int",
+				MeetingID:             "single-ext",
+				InternalMeetingID:     "single-int",
 				CreateTime:            1700000000000,
 				CreateDate:            "Wed Nov 14 12:26:40 UTC 2023",
 				VoiceBridge:           "74444",
@@ -809,7 +809,7 @@ func TestGRPCToResponse_Transform(t *testing.T) {
 				Users: meetingapi.Users{
 					Users: []meetingapi.User{
 						{
-							UserId:          "solo-user",
+							UserID:          "solo-user",
 							FullName:        "Solo Person",
 							Role:            "MODERATOR",
 							IsPresenter:     true,
@@ -867,8 +867,8 @@ func TestGRPCToResponse_Transform(t *testing.T) {
 			expected: &meetingapi.GetMeetingInfoResponse{
 				ReturnCode:            "SUCCESS",
 				MeetingName:           "会议 - Встреча - مؤتمر",
-				MeetingId:             "unicode-ext",
-				InternalMeetingId:     "unicode-int",
+				MeetingID:             "unicode-ext",
+				InternalMeetingID:     "unicode-int",
 				CreateTime:            1700000000000,
 				CreateDate:            "Wed Nov 14 12:26:40 UTC 2023",
 				VoiceBridge:           "75555",
@@ -935,8 +935,8 @@ func TestGRPCToResponse_Transform(t *testing.T) {
 			expected: &meetingapi.GetMeetingInfoResponse{
 				ReturnCode:            "SUCCESS",
 				MeetingName:           "Parent Meeting",
-				MeetingId:             "parent-ext",
-				InternalMeetingId:     "parent-int",
+				MeetingID:             "parent-ext",
+				InternalMeetingID:     "parent-int",
 				CreateTime:            1700000000000,
 				CreateDate:            "Wed Nov 14 12:26:40 UTC 2023",
 				VoiceBridge:           "76666",
@@ -1003,8 +1003,8 @@ func TestGRPCToResponse_Transform(t *testing.T) {
 			expected: &meetingapi.GetMeetingInfoResponse{
 				ReturnCode:            "SUCCESS",
 				MeetingName:           "Max Values Meeting",
-				MeetingId:             "max-ext",
-				InternalMeetingId:     "max-int",
+				MeetingID:             "max-ext",
+				InternalMeetingID:     "max-int",
 				CreateTime:            9223372036854775807,
 				CreateDate:            "Max Time",
 				VoiceBridge:           "99999",
@@ -1058,11 +1058,11 @@ func TestGRPCToResponse_Transform(t *testing.T) {
 			if got.MeetingName != tt.expected.MeetingName {
 				t.Errorf("MeetingName = %q, want %q", got.MeetingName, tt.expected.MeetingName)
 			}
-			if got.MeetingId != tt.expected.MeetingId {
-				t.Errorf("MeetingId = %q, want %q", got.MeetingId, tt.expected.MeetingId)
+			if got.MeetingID != tt.expected.MeetingID {
+				t.Errorf("MeetingID = %q, want %q", got.MeetingID, tt.expected.MeetingID)
 			}
-			if got.InternalMeetingId != tt.expected.InternalMeetingId {
-				t.Errorf("InternalMeetingId = %q, want %q", got.InternalMeetingId, tt.expected.InternalMeetingId)
+			if got.InternalMeetingID != tt.expected.InternalMeetingID {
+				t.Errorf("InternalMeetingID = %q, want %q", got.InternalMeetingID, tt.expected.InternalMeetingID)
 			}
 			if got.CreateTime != tt.expected.CreateTime {
 				t.Errorf("CreateTime = %d, want %d", got.CreateTime, tt.expected.CreateTime)
@@ -1131,8 +1131,8 @@ func TestGRPCToResponse_Transform(t *testing.T) {
 			} else {
 				for i, gotUser := range got.Users.Users {
 					expUser := tt.expected.Users.Users[i]
-					if gotUser.UserId != expUser.UserId {
-						t.Errorf("User[%d].UserId = %q, want %q", i, gotUser.UserId, expUser.UserId)
+					if gotUser.UserID != expUser.UserID {
+						t.Errorf("User[%d].UserID = %q, want %q", i, gotUser.UserID, expUser.UserID)
 					}
 					if gotUser.FullName != expUser.FullName {
 						t.Errorf("User[%d].FullName = %q, want %q", i, gotUser.FullName, expUser.FullName)

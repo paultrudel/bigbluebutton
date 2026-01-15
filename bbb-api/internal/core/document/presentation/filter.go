@@ -24,10 +24,10 @@ func (f *MeetingRunningFilter) Filter(msg pipeline.Message[*meeting.MeetingRunni
 	return nil
 }
 
-// PresentationFilter is a pipeline.Filter implementation used for
+// UploadFilter is a pipeline.Filter implementation used for
 // validating uploaded presentations before they enter the document
 // conversion pipeline.
-type PresentationFilter struct {
+type UploadFilter struct {
 	scanner document.Scanner
 }
 
@@ -36,7 +36,7 @@ type PresentationFilter struct {
 // the presentation's file extension. The presentation may also be
 // scanner for malware is the setting is enabled in the document
 // processing configuration.
-func (f *PresentationFilter) Filter(msg pipeline.Message[*document.Presentation]) error {
+func (f *UploadFilter) Filter(msg pipeline.Message[*document.Presentation]) error {
 	pres := msg.Payload
 
 	_, ext := document.SplitFileName(pres.FilePath)

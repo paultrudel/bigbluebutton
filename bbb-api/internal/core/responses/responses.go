@@ -48,8 +48,8 @@ const (
 	RecordFormatErrorKey = ValidationErrorKey
 	RecordFormatErrorMsg = "Record must be a boolean value (true or false)"
 
-	ParentMeetingIdMissingErrorKey = "parentMeetingIDMissing"
-	ParentMeetingIdMissingErrorMsg = "No parent meeting ID was provided for the breakout room"
+	ParentMeetingIDMissingErrorKey = "parentMeetingIDMissing"
+	ParentMeetingIDMissingErrorMsg = "No parent meeting ID was provided for the breakout room"
 
 	ParentMeetingDoesNotExistErrorKey = "parentMeetingDoesNotExist"
 	ParentMeetingDoesNotExistErrorMsg = "No parent meeting exists for the breakout room"

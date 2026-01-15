@@ -13,8 +13,8 @@ import (
 // ValidateMeetingID checks whether the provided meeting ID is valid.
 // A valid meeting ID is between 2 and 256 characters long and does not
 // contain any commas. Returns an error if the meeting ID is not valid.
-func ValidateMeetingID(meetingId string) error {
-	id := strings.TrimSpace(meetingId)
+func ValidateMeetingID(meetingID string) error {
+	id := strings.TrimSpace(meetingID)
 	if id == "" {
 		return core.NewBBBError(responses.MeetingIDMissingErrorKey, responses.MeetingIDMissingErrorMsg)
 	}

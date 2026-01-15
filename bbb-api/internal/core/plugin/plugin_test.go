@@ -9,20 +9,20 @@ func TestParse(t *testing.T) {
 	tests := []struct {
 		name    string
 		input   string
-		want    []PluginManifest
+		want    []Manifest
 		wantErr bool
 	}{
 		{
 			name:  "Single item full fields",
 			input: `[{"url":"https://example.com/plugin.tgz","checksum":"abc123"}]`,
-			want: []PluginManifest{
+			want: []Manifest{
 				{URL: "https://example.com/plugin.tgz", Checksum: "abc123"},
 			},
 		},
 		{
 			name:  "Multiple items with missing checksum",
 			input: `[{"url":"https://a.com/p1.tgz","checksum":"abc123"},{"url":"https://b.com/p2.tgz"}]`,
-			want: []PluginManifest{
+			want: []Manifest{
 				{URL: "https://a.com/p1.tgz", Checksum: "abc123"},
 				{URL: "https://b.com/p2.tgz", Checksum: ""},
 			},
@@ -30,14 +30,14 @@ func TestParse(t *testing.T) {
 		{
 			name:  "Unknown field",
 			input: `[{"url":"https://x.com/p.tgz","extra":"ignored"}]`,
-			want: []PluginManifest{
+			want: []Manifest{
 				{URL: "https://x.com/p.tgz"},
 			},
 		},
 		{
 			name:  "Empty array",
 			input: `[]`,
-			want:  []PluginManifest{},
+			want:  []Manifest{},
 		},
 		{
 			name:  "Null input",
@@ -48,31 +48,31 @@ func TestParse(t *testing.T) {
 			name:    "Empty string",
 			input:   ``,
 			wantErr: true,
-			want:    []PluginManifest{},
+			want:    []Manifest{},
 		},
 		{
 			name:    "Whitespace only",
 			input:   `   `,
 			wantErr: true,
-			want:    []PluginManifest{},
+			want:    []Manifest{},
 		},
 		{
 			name:    "Wrong top-level type (object, not array)",
 			input:   `{"url":"https://example.com"}`,
 			wantErr: true,
-			want:    []PluginManifest{},
+			want:    []Manifest{},
 		},
 		{
 			name:    "Wrong field type for url",
 			input:   `[{"url":123,"checksum":"x"}]`,
 			wantErr: true,
-			want:    []PluginManifest{},
+			want:    []Manifest{},
 		},
 		{
 			name:    "Malformed JSON",
 			input:   `[{"url":"x","checksum":"y"}`,
 			wantErr: true,
-			want:    []PluginManifest{},
+			want:    []Manifest{},
 		},
 	}
 

@@ -1,13 +1,44 @@
-1 - Run ./setup-dev-env.sh
-2 - Run bbb-akka-apps using ./run-dev.sh (inside the Docker)
-3 - Run bbb-core-api using ./run-dev.sh (inside the Docker)
-4 - You can access the new API in your browser (replace the domain) https://YOUR-DOMAIN/core-api/getMeetings?checksum=123
-5 - Use API Mate to generate the checksum `bbb-conf -salt`
+# BigBlueButton API
+
+### Setting up Your Environment
+
+To effectively develop, build, and run the BigBlueButton API applications you must properly set up your
+environment. At minimum, [Go](https://go.dev/), [golangci-lint](https://golangci-lint.run/),
+[Docker](https://www.docker.com/), [the protocol buffer compiler](https://protobuf.dev/installation/), 
+[the Go protocol buffer compiler](https://protobuf.dev/reference/go/go-generated-opaque/), and [gRPC for Go](https://grpc.io/docs/languages/go/quickstart/) 
+must be installed for everything to function properly.
+
+If you are on Ubuntu you may run `setup-dev-env.sh` located in the top-level directory of `bbb-api`
+to easily setup your environment.
+
+### Building and Running APIs Locally
+
+Each API has a separate `main.go` file that must be built against and executed. The main entry point for
+each API is located in a subdirectory of `/cmd`. For example, to build a local version of the Meeting 
+API you can run these commands from the top-level directory of `/bbb-api`:
+```
+go mod vendor
+go build ./cmd/meeting-api
+```
+Akka Apps should be running locally alongside these APIs for everything to function properly. You can run
+Akka Apps from the `bbb-akka-apps` directory using `run-dev.sh`.
+
+The new API can be accessed at `https://YOUR-DOMAIN/getMeetings?checksum=123`.
+
+Update each APIs configuration with your security salt which can be obtained using `bbb-conf --salt`.
+
+### Linting
+
+Linting is done using `golangci-lint`. Run linting by using:
+```
+golangci-lint run
+```
 
 ### Unit Testing
 
 Run unit tests with:
 ```
+go clean -testcache
 go test ./...
 ```
 
@@ -23,7 +54,7 @@ docker build -f Dockerfile-meeting -t imdt/bigbluebutton-api-meeting:latest .
 ### Integration Testing
 
 Integration tests are specific to individual APIs and build tags are used to differentiate the tests. For example, to run the integration
-tests for the meeting API against the build docker image use:
+tests for the meeting API against the built docker image use:
 ```
 go test ./test/... --tags=integration,meeting
 ```

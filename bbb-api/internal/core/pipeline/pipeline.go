@@ -25,12 +25,12 @@ type Message[T any] struct {
 
 // NewMessage creates a new Message with the provided payload using [context.Background].
 func NewMessage[T any](payload T) Message[T] {
-	return NewMessageWithContext(payload, context.Background())
+	return NewMessageWithContext(context.Background(), payload)
 }
 
 // NewMessageWithContext creates a new Message using the given payload and [context.Context]. The provided
 // ctx must not be nil.
-func NewMessageWithContext[T any](payload T, ctx context.Context) Message[T] {
+func NewMessageWithContext[T any](ctx context.Context, payload T) Message[T] {
 	if ctx == nil {
 		panic("nil context provided")
 	}

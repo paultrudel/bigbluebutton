@@ -241,7 +241,7 @@ func TestRequestFilter_Filter(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			filter := &RequestFilter{}
 			req := tt.setupRequest()
-			msg := pipeline.NewMessageWithContext(req, req.Context())
+			msg := pipeline.NewMessageWithContext(req.Context(), req)
 
 			err := filter.Filter(msg)
 

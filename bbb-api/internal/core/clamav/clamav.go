@@ -55,7 +55,6 @@ func (s *ClamdScanner) Scan(path string) (string, error) {
 		return resp, nil
 	} else if strings.HasSuffix(parts[1], "FOUND") {
 		return resp, fmt.Errorf("virus detected in file")
-	} else {
-		return resp, fmt.Errorf("unknown response from ClamAV: %s", resp)
 	}
+	return resp, fmt.Errorf("unknown response from ClamAV: %s", resp)
 }

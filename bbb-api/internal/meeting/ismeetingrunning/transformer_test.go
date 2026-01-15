@@ -193,7 +193,7 @@ func TestHTTPToGRPC_Transform(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			transformer := &HTTPToGRPC{}
 			req := tt.setupRequest(tt.meetingID, tt.includeParams)
-			msg := pipeline.NewMessageWithContext(req, req.Context())
+			msg := pipeline.NewMessageWithContext(req.Context(), req)
 
 			result, err := transformer.Transform(msg)
 
@@ -263,7 +263,7 @@ func TestHTTPToGRPC_Transform_MessageContext(t *testing.T) {
 				params.Set(meetingapi.IDParam, bbbhttp.Param{Value: meetingID, FromQuery: true})
 				ctx := context.WithValue(context.Background(), bbbhttp.ParamsKey, params)
 				req = req.WithContext(ctx)
-				return pipeline.NewMessageWithContext(req, ctx)
+				return pipeline.NewMessageWithContext(ctx, req)
 			},
 			shouldErr: false,
 		},

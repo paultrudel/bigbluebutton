@@ -18,7 +18,7 @@ func ToUser(u *common.User) User {
 	customData := ToMapData(u.CustomData, "customdata")
 
 	user := User{
-		UserId:          u.UserId,
+		UserID:          u.UserId,
 		FullName:        u.FullName,
 		Role:            u.Role,
 		IsPresenter:     u.IsPresenter,
@@ -45,8 +45,8 @@ func ToMeeting(m *common.MeetingInfo) Meeting {
 
 	meeting := Meeting{
 		MeetingName:           m.MeetingName,
-		MeetingId:             m.MeetingExtId,
-		InternalMeetingId:     m.MeetingIntId,
+		MeetingID:             m.MeetingExtId,
+		InternalMeetingID:     m.MeetingIntId,
 		CreateTime:            m.DurationInfo.CreateTime,
 		CreateDate:            m.DurationInfo.CreatedOn,
 		VoiceBridge:           m.VoiceBridge,

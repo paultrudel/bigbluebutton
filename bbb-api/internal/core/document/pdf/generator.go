@@ -28,14 +28,14 @@ func (g *DownloadMarkerGenerator) Generate(msg pipeline.Message[*document.Presen
 	pres := msg.Payload
 
 	if !pres.Downloadable {
-		return pipeline.NewMessageWithContext(pres, msg.Context()), nil
+		return pipeline.NewMessageWithContext(msg.Context(), pres), nil
 	}
 
 	err := document.MakeDownloadable(msg.Payload.ID, pres.FilePath)
 	if err != nil {
-		return pipeline.NewMessageWithContext(pres, msg.Context()), fmt.Errorf("failed to generate download marker: %w", err)
+		return pipeline.NewMessageWithContext(msg.Context(), pres), fmt.Errorf("failed to generate download marker: %w", err)
 	}
-	return pipeline.NewMessageWithContext(pres, msg.Context()), nil
+	return pipeline.NewMessageWithContext(msg.Context(), pres), nil
 }
 
 // PageGenerator handles the creation of individual page documents
@@ -98,7 +98,7 @@ func (g *PageGenerator) Generate(msg pipeline.Message[*document.Presentation]) (
 	inFile := pres.FilePath
 	numPages, err := g.processor.CountPages(inFile)
 	if err != nil {
-		return pipeline.NewMessageWithContext(pres, msg.Context()), fmt.Errorf("failed to count pages: %w", err)
+		return pipeline.NewMessageWithContext(msg.Context(), pres), fmt.Errorf("failed to count pages: %w", err)
 	}
 
 	eg, _ := errgroup.WithContext(msg.Context())
@@ -137,13 +137,21 @@ func (g *PageGenerator) Generate(msg pipeline.Message[*document.Presentation]) (
 					slog.Error("Failed to downscale page", "error", dsErr)
 					page.UseBlanks = true
 				} else {
-					os.Rename(dsFile, outFile)
+					if rnErr := os.Rename(dsFile, outFile); rnErr != nil {
+						slog.Warn("Failed to rename file", "error", rnErr)
+					}
 				}
 
-				os.Remove(extFile)
-				os.Remove(dsFile)
+				if rmErr := os.Remove(extFile); rmErr != nil {
+					slog.Warn("Failed to remove file", "error", rmErr)
+				}
+				if rmErr := os.Remove(dsFile); rmErr != nil {
+					slog.Warn("Failed to remove file", "error", rmErr)
+				}
 			} else {
-				os.Rename(extFile, outFile)
+				if rnErr := os.Rename(extFile, outFile); rnErr != nil {
+					slog.Warn("Failed to rename file", "error", rnErr)
+				}
 			}
 
 			pages = append(pres.Pages, page)
@@ -152,7 +160,7 @@ func (g *PageGenerator) Generate(msg pipeline.Message[*document.Presentation]) (
 	}
 
 	pres.Pages = pages
-	return pipeline.NewMessageWithContext(pres, msg.Context()), nil
+	return pipeline.NewMessageWithContext(msg.Context(), pres), nil
 }
 
 // Thumbnail generator handles the creation of thumbnails for a
@@ -244,7 +252,7 @@ func (g *ThumbnailGenerator) Generate(msg pipeline.Message[*document.Presentatio
 	}
 
 	pres.Pages = pages
-	return pipeline.NewMessageWithContext(pres, msg.Context()), nil
+	return pipeline.NewMessageWithContext(msg.Context(), pres), nil
 }
 
 func (g *ThumbnailGenerator) pdfToThumbnail(ctx context.Context, pdfPath, thumbPath string) error {
@@ -358,7 +366,7 @@ func (g *TextFileGenerator) Generate(msg pipeline.Message[*document.Presentation
 	}
 
 	pres.Pages = pages
-	return pipeline.NewMessageWithContext(pres, msg.Context()), nil
+	return pipeline.NewMessageWithContext(msg.Context(), pres), nil
 }
 
 func (g *TextFileGenerator) pdfToText(ctx context.Context, pdfPath, textPath string, page int) error {
@@ -447,7 +455,7 @@ func WithSVGExec(exec func(ctx context.Context, name string, args ...string) *ex
 func (g *SVGGenerator) Generate(msg pipeline.Message[*document.Presentation]) (pipeline.Message[*document.Presentation], error) {
 	pres := msg.Payload
 	if !g.cfg.Generation.SVG.Generate {
-		return pipeline.NewMessageWithContext(pres, msg.Context()), nil
+		return pipeline.NewMessageWithContext(msg.Context(), pres), nil
 	}
 
 	pages := make([]document.Page, 0)
@@ -516,7 +524,7 @@ func (g *SVGGenerator) Generate(msg pipeline.Message[*document.Presentation]) (p
 
 	pres.Pages = pages
 
-	return pipeline.NewMessageWithContext(pres, msg.Context()), nil
+	return pipeline.NewMessageWithContext(msg.Context(), pres), nil
 }
 
 func (g *SVGGenerator) detectFontTypeWithRetry(
@@ -566,7 +574,7 @@ func (g *SVGGenerator) pdfToSVG(ctx context.Context, pdfPath, svgPath string, pa
 		Format(document.GenerationProcessFormatSVG).
 		Pages(page, page).
 		InputOutput(pdfPath, svgPath).
-		Execute(g.exec, int(g.cfg.Generation.SVG.Timeout), ctx)
+		Execute(ctx, g.exec, int(g.cfg.Generation.SVG.Timeout))
 
 	if out, err := cmd.CombinedOutput(); err != nil {
 		return fmt.Errorf("PDF to SVG: %w; output: %s", err, string(out))
@@ -594,7 +602,7 @@ func (g *SVGGenerator) pdfToPNG(ctx context.Context, pdfPath, pngPath string, pa
 		Rasterize(g.cfg.Generation.SVG.Rasterize.Width).
 		Pages(page, page).
 		InputOutput(pdfPath, pngPath).
-		Execute(g.exec, int(g.cfg.Generation.SVG.Timeout), ctx)
+		Execute(ctx, g.exec, int(g.cfg.Generation.SVG.Timeout))
 
 	if out, err := cmd.CombinedOutput(); err != nil {
 		return fmt.Errorf("PDF to PNG: %w; output: %s", err, string(out))
@@ -728,7 +736,7 @@ func WithPNGExec(exec func(ctx context.Context, name string, args ...string) *ex
 func (g *PNGGenerator) Generate(msg pipeline.Message[*document.Presentation]) (pipeline.Message[*document.Presentation], error) {
 	pres := msg.Payload
 	if !g.cfg.Generation.PNG.Generate {
-		return pipeline.NewMessageWithContext(pres, msg.Context()), nil
+		return pipeline.NewMessageWithContext(msg.Context(), pres), nil
 	}
 
 	pages := make([]document.Page, 0)
@@ -766,7 +774,7 @@ func (g *PNGGenerator) Generate(msg pipeline.Message[*document.Presentation]) (p
 	}
 
 	pres.Pages = pages
-	return pipeline.NewMessageWithContext(pres, msg.Context()), nil
+	return pipeline.NewMessageWithContext(msg.Context(), pres), nil
 }
 
 func (g *PNGGenerator) pdfToPNG(ctx context.Context, pdfPath, pngPath string, page int) error {
@@ -787,7 +795,7 @@ func (g *PNGGenerator) pdfToPNG(ctx context.Context, pdfPath, pngPath string, pa
 		Format(document.GenerationProcessFormatPNG).
 		Pages(page, page).
 		InputOutput(pdfPath, pngPath).
-		Execute(g.exec, int(g.cfg.Generation.PNG.Timeout), ctx)
+		Execute(ctx, g.exec, int(g.cfg.Generation.PNG.Timeout))
 
 	if out, err := cmd.CombinedOutput(); err != nil {
 		return fmt.Errorf("PDF to PNG: %w; output: %s", err, string(out))

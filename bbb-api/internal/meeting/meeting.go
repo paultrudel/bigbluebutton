@@ -44,7 +44,7 @@ type Users struct {
 // BigBlueButton user.
 type User struct {
 	XMLName         xml.Name `xml:"attendee"`
-	UserId          string   `xml:"userID"`
+	UserID          string   `xml:"userID"`
 	FullName        string   `xml:"fullName"`
 	Role            string   `xml:"role"`
 	IsPresenter     bool     `xml:"isPresenter"`
@@ -67,8 +67,8 @@ type BreakoutRooms struct {
 type Meeting struct {
 	XMLName               xml.Name `xml:"meeting"`
 	MeetingName           string   `xml:"meetingName"`
-	MeetingId             string   `xml:"meetingID"`
-	InternalMeetingId     string   `xml:"internalMeetingID"`
+	MeetingID             string   `xml:"meetingID"`
+	InternalMeetingID     string   `xml:"internalMeetingID"`
 	CreateTime            int64    `xml:"createTime"`
 	CreateDate            string   `xml:"createDate"`
 	VoiceBridge           string   `xml:"voiceBridge"`
@@ -100,8 +100,8 @@ type GetMeetingInfoResponse struct {
 	XMLName               xml.Name `xml:"response"`
 	ReturnCode            string   `xml:"returncode"`
 	MeetingName           string   `xml:"meetingName"`
-	MeetingId             string   `xml:"meetingID"`
-	InternalMeetingId     string   `xml:"internalMeetingID"`
+	MeetingID             string   `xml:"meetingID"`
+	InternalMeetingID     string   `xml:"internalMeetingID"`
 	CreateTime            int64    `xml:"createTime"`
 	CreateDate            string   `xml:"createDate"`
 	VoiceBridge           string   `xml:"voiceBridge"`
@@ -132,9 +132,9 @@ type GetMeetingInfoResponse struct {
 type CreateMeetingResponse struct {
 	XMLName              xml.Name `xml:"response"`
 	ReturnCode           string   `xml:"returnCode"`
-	MeetingId            string   `xml:"meetingID"`
-	InternalMeetingId    string   `xml:"internalMeetingID"`
-	ParentMeetingId      string   `xml:"parentMeetingID"`
+	MeetingID            string   `xml:"meetingID"`
+	InternalMeetingID    string   `xml:"internalMeetingID"`
+	ParentMeetingID      string   `xml:"parentMeetingID"`
 	AttendeePW           string   `xml:"attendeePW,omitempty"`
 	ModeratorPW          string   `xml:"moderatorPw,omitempty"`
 	CreateTime           int64    `xml:"createTime"`

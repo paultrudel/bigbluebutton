@@ -38,8 +38,8 @@ func NewCreateFlow(client meetingapi.Client, proc document.Processor) pipeline.F
 	sendReceiveCreateMeeting := pipeline.NewStep[*meeting.CreateMeetingRequest, *meeting.CreateMeetingResponse]().SendReceive(&SendCreateMeetingRequest{})
 
 	filterTransformToResponse := pipeline.NewStep[*meeting.CreateMeetingResponse, *meetingapi.CreateMeetingResponse]().
-		Filter(&CreateMeetingResponseFilter{}).
-		Transform(&CreateMeetingToResponse{proc})
+		Filter(&ResponseFilter{}).
+		Transform(&ToResponse{proc})
 
 	f1 := pipeline.Add(filterTransformToMeetingRunning.Flow(), sendReceiveMeetingRunning)
 	f2 := pipeline.Add(f1, filterTransformToMeetingInfo)

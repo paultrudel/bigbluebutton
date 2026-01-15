@@ -31,11 +31,11 @@ func (s *SendMeetingRunningRequest) Send(msg pipeline.Message[*meeting.MeetingRu
 	params := msg.Context().Value(core.ParamsKey).(bbbhttp.Params)
 	isBreakoutRoom := validation.StripCtrlChars(params.Get(meetingapi.IsBreakoutRoomParam).Value)
 	if !core.GetBoolOrDefaultValue(isBreakoutRoom, false) {
-		return pipeline.NewMessageWithContext(&meeting.MeetingRunningResponse{
+		return pipeline.NewMessageWithContext(msg.Context(), &meeting.MeetingRunningResponse{
 			MeetingRunning: &common.MeetingRunning{
 				IsRunning: true,
 			},
-		}, msg.Context()), nil
+		}), nil
 	}
 
 	if s.client == nil {
@@ -50,7 +50,7 @@ func (s *SendMeetingRunningRequest) Send(msg pipeline.Message[*meeting.MeetingRu
 		slog.Error("IsMeetingRunning gRPC request failed", "error", err)
 		return pipeline.Message[*meeting.MeetingRunningResponse]{}, core.GrpcErrorToBBBError(err)
 	}
-	return pipeline.NewMessageWithContext(res, msg.Context()), nil
+	return pipeline.NewMessageWithContext(msg.Context(), res), nil
 }
 
 // SendMeetingInfoRequest is an implementation of the pipeline.SenderReceiver
@@ -67,7 +67,7 @@ func (s *SendMeetingInfoRequest) Send(msg pipeline.Message[*meeting.MeetingInfoR
 	params := msg.Context().Value(core.ParamsKey).(bbbhttp.Params)
 	isBreakoutRoom := validation.StripCtrlChars(params.Get(meetingapi.IsBreakoutRoomParam).Value)
 	if !core.GetBoolOrDefaultValue(isBreakoutRoom, false) {
-		return pipeline.NewMessageWithContext(&meeting.MeetingInfoResponse{}, msg.Context()), nil
+		return pipeline.NewMessageWithContext(msg.Context(), &meeting.MeetingInfoResponse{}), nil
 	}
 
 	if s.client == nil {
@@ -82,7 +82,7 @@ func (s *SendMeetingInfoRequest) Send(msg pipeline.Message[*meeting.MeetingInfoR
 		slog.Error("MeetingInfo gRPC request failed", "error", err)
 		return pipeline.Message[*meeting.MeetingInfoResponse]{}, core.GrpcErrorToBBBError(err)
 	}
-	return pipeline.NewMessageWithContext(res, msg.Context()), nil
+	return pipeline.NewMessageWithContext(msg.Context(), res), nil
 }
 
 // SendCreateMeetingRequest is an implementation of the pipeline.SenderReceiver

@@ -54,8 +54,8 @@ func (g *GRPCToResponse) Transform(msg pipeline.Message[*meeting.MeetingInfoResp
 	meetingInfoResponse := &meetingapi.GetMeetingInfoResponse{
 		ReturnCode:            responses.ReturnCodeSuccess,
 		MeetingName:           resp.MeetingInfo.MeetingName,
-		MeetingId:             resp.MeetingInfo.MeetingExtId,
-		InternalMeetingId:     resp.MeetingInfo.MeetingIntId,
+		MeetingID:             resp.MeetingInfo.MeetingExtId,
+		InternalMeetingID:     resp.MeetingInfo.MeetingIntId,
 		CreateTime:            resp.MeetingInfo.DurationInfo.CreateTime,
 		CreateDate:            resp.MeetingInfo.DurationInfo.CreatedOn,
 		VoiceBridge:           resp.MeetingInfo.VoiceBridge,
