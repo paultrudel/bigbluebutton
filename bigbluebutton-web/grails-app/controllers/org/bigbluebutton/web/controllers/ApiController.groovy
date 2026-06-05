@@ -1612,6 +1612,16 @@ class ApiController {
       presentationListHasCurrent = hasCurrent;
     }
 
+    int maxPresentations = paramsProcessorUtil.getMaxPresentationsPerRequest()
+    if (maxPresentations > 0 && listOfPresentation.size() > maxPresentations) {
+      int dropped = listOfPresentation.size() - maxPresentations
+      log.warn("Presentation count {} exceeds maxPresentationsPerRequest {} for meeting {} " +
+               "(isFromInsertAPI={}); processing first {} and dropping {}.",
+               listOfPresentation.size(), maxPresentations, conf.getInternalId(),
+               isFromInsertAPI, maxPresentations, dropped)
+      listOfPresentation = listOfPresentation.take(maxPresentations)
+    }
+
     listOfPresentation.eachWithIndex { document, index ->
       def Boolean isCurrent = false;
       def Boolean isRemovable = true;
