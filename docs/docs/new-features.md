@@ -499,6 +499,8 @@ Modified/added events
 - `clientSettingsOverrideStrictValidation` added in BBB 3.0.30
 - `clientSettingsFilePath` added in BBB 3.0.30
 - `maxPresentationsPerRequest` added in BBB 3.0
+- `insertDocumentMaxRequests` added in BBB 3.0
+- `insertDocumentRateWindowSec` added in BBB 3.0
 
 ### Removed support for POST requests on `join` endpoint and Content-Type headers are now required
 
