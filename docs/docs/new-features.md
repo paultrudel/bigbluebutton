@@ -526,8 +526,13 @@ Modified/added events
 - `clientSettingsOverrideStrictValidation` added in BBB 3.0.30
 - `clientSettingsFilePath` added in BBB 3.0.30
 - `maxPresentationsPerRequest` added in BBB 3.0
-- `insertDocumentMaxRequests` added in BBB 3.0
+- `insertDocumentMaxRequests` added in BBB 3.0 — set to `0` to disable
 - `insertDocumentRateWindowSec` added in BBB 3.0
+- `presentationConversionMaxRequests` added in BBB 3.0 — per-meeting cap on presentations entering the conversion pipeline, covering every upload source; set to `0` to disable
+- `presentationConversionRateWindowSec` added in BBB 3.0
+- `apps.presentationUploadTokenMaxRequests` (bbb-apps-akka) added in BBB 3.0 — per-user upload-token request rate limit; set to `0` to disable
+- `apps.presentationUploadTokenWindowSec` (bbb-apps-akka) added in BBB 3.0
+- `apps.presentationMaxPerPod` (bbb-apps-akka) added in BBB 3.0 — caps presentations held in a pod (meeting state, not conversion load); set to `0` to disable
 - `maxSharedNotesInitialContentUrlPayloadSize` added — caps the size (in KiB, default `1024`) of the response fetched by `sharedNotesInitialContentJsonUrl` / `sharedNotesInitialContentMarkdownUrl`
 
 ### Removed support for POST requests on `join` endpoint and Content-Type headers are now required
