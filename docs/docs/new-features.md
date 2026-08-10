@@ -528,7 +528,7 @@ Modified/added events
 - `maxPresentationsPerRequest` added in BBB 3.0
 - `insertDocumentMaxRequests` added in BBB 3.0 — set to `0` to disable
 - `insertDocumentRateWindowSec` added in BBB 3.0
-- `presentationConversionMaxRequests` added in BBB 3.0 — per-meeting cap on presentations entering the conversion pipeline from participant and API uploads; set to `0` to disable
+- `presentationConversionMaxRequests` added in BBB 3.0 — per-meeting cap on presentations entering the conversion pipeline from participant and API uploads; breakout-room captures are exempt and are not rate limited by any setting; set to `0` to disable
 - `presentationConversionRateWindowSec` added in BBB 3.0
 - `apps.presentationUploadTokenMaxRequests` (bbb-apps-akka) added in BBB 3.0 — per-user upload-token request rate limit; set to `0` to disable
 - `apps.presentationUploadTokenWindowSec` (bbb-apps-akka) added in BBB 3.0
